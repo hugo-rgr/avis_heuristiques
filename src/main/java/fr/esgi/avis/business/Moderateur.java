@@ -11,6 +11,6 @@ import lombok.Setter;
 @Getter
 @Setter
 @Data
-public class Moderateur {
+public class Moderateur extends Utilisateur{
     private String numeroDeTelephone;
 }

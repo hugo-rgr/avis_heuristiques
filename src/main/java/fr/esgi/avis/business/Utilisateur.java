@@ -1,16 +1,13 @@
 package fr.esgi.avis.business;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
-@AllArgsConstructor
+@NoArgsConstructor
 @Getter
 @Setter
 @Data
-public class Utilisateur {
 
+abstract class Utilisateur {
     private Long id;
     private String pseudo;
     private String email;

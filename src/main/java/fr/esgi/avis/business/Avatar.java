@@ -11,6 +11,7 @@ import lombok.Setter;
 @Setter
 @Data
 public class Avatar {
+
     private Long id;
     private String nom;
     private Joueur joueur;

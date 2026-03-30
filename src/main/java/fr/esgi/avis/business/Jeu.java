@@ -22,6 +22,7 @@ public class Jeu {
     private String image;
     private float prix;
     private LocalDate dateDeSortie;
+    private Editeur editeur;
     private Classification classification;
     private List<Plateforme> plateformes;
 }

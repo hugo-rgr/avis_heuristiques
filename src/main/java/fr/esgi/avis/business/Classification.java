@@ -17,5 +17,4 @@ public class Classification {
     private String nom;
     private List<Jeu> jeux;
     private String couleurRGB;
-
 }

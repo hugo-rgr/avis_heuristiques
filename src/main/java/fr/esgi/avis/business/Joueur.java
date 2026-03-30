@@ -14,8 +14,7 @@ import java.util.List;
 @Getter
 @Setter
 @Data
-public class Joueur {
-
+public class Joueur extends  Utilisateur {
     private List<Avis> avis;
     private LocalDate dateDeNaissance;
     private Avatar avatar;

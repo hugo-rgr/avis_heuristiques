@@ -3,6 +3,7 @@ package fr.esgi.avis.service;
 import fr.esgi.avis.business.Plateforme;
 import fr.esgi.avis.dto.in.PlatefomeDtoIn;
 import fr.esgi.avis.dto.out.PlatefomeDtoOut;
+import fr.esgi.avis.mapper.PlateformeMapper;
 import fr.esgi.avis.port.out.PlateformePort;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -27,6 +28,9 @@ class PlateformeServiceTest {
     @Mock
     private PlateformePort plateformePort;
 
+    @Mock
+    private PlateformeMapper plateformeMapper;
+
     @InjectMocks
     private PlateformeService plateformeService;
 
@@ -42,7 +46,9 @@ class PlateformeServiceTest {
     @Test
     @DisplayName("Should create a new platform")
     void testCreerUnePlateforme() {
+        when(plateformeMapper.toDomain(any(PlatefomeDtoIn.class))).thenReturn(plateforme);
         when(plateformePort.save(any(Plateforme.class))).thenReturn(plateforme);
+        when(plateformeMapper.toDto(any(Plateforme.class))).thenReturn(new PlatefomeDtoOut(1L, "PlayStation 5", LocalDate.of(2020, 11, 12), List.of()));
 
         PlatefomeDtoOut result = plateformeService.creerUnePlateforme(platefomeDtoIn);
 
@@ -59,6 +65,7 @@ class PlateformeServiceTest {
 
         when(plateformePort.findById(1L)).thenReturn(Optional.of(plateforme));
         when(plateformePort.save(any(Plateforme.class))).thenReturn(updatedPlateforme);
+        when(plateformeMapper.toDto(any(Plateforme.class))).thenReturn(new PlatefomeDtoOut(1L, "PlayStation 5 Pro", LocalDate.of(2024, 11, 7), List.of()));
 
         PlatefomeDtoOut result = plateformeService.mettreAJour(1L, updateDto);
 
@@ -82,6 +89,7 @@ class PlateformeServiceTest {
     @DisplayName("Should retrieve platform by id")
     void testRecupererUnePlateformeParId() {
         when(plateformePort.findById(1L)).thenReturn(Optional.of(plateforme));
+        when(plateformeMapper.toDto(any(Plateforme.class))).thenReturn(new PlatefomeDtoOut(1L, "PlayStation 5", LocalDate.of(2020, 11, 12), List.of()));
 
         PlatefomeDtoOut result = plateformeService.recupererUnePlateformeParId(1L);
 
@@ -105,6 +113,8 @@ class PlateformeServiceTest {
     void testRecupererToutesLesPlateformes() {
         Plateforme plateforme2 = new Plateforme(2L, "Xbox Series X", List.of(), LocalDate.of(2020, 11, 10));
         when(plateformePort.findAll()).thenReturn(List.of(plateforme, plateforme2));
+        when(plateformeMapper.toDto(plateforme)).thenReturn(new PlatefomeDtoOut(1L, "PlayStation 5", LocalDate.of(2020, 11, 12), List.of()));
+        when(plateformeMapper.toDto(plateforme2)).thenReturn(new PlatefomeDtoOut(2L, "Xbox Series X", LocalDate.of(2020, 11, 10), List.of()));
 
         List<PlatefomeDtoOut> result = plateformeService.recupererToutesLesPlateformes();
 
@@ -121,4 +131,3 @@ class PlateformeServiceTest {
         verify(plateformePort, times(1)).deleteById(1L);
     }
 }
-

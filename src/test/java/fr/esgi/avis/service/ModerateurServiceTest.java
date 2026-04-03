@@ -4,6 +4,8 @@ import fr.esgi.avis.business.*;
 import fr.esgi.avis.dto.in.JeuDtoIn;
 import fr.esgi.avis.dto.out.JeuDtoOut;
 import fr.esgi.avis.dto.out.ModerateurDtoOut;
+import fr.esgi.avis.mapper.JeuMapper;
+import fr.esgi.avis.mapper.ModerateurMapper;
 import fr.esgi.avis.port.out.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -46,6 +48,12 @@ class ModerateurServiceTest {
     @Mock
     private PlateformePort plateformePort;
 
+    @Mock
+    private ModerateurMapper moderateurMapper;
+
+    @Mock
+    private JeuMapper jeuMapper;
+
     @InjectMocks
     private ModerateurService moderateurService;
 
@@ -67,6 +75,7 @@ class ModerateurServiceTest {
     @DisplayName("Should connect moderator with correct credentials")
     void testSeConnecter() {
         when(moderateurPort.findByEmail("mod@example.com")).thenReturn(Optional.of(moderateur));
+        when(moderateurMapper.toDto(any(Moderateur.class))).thenReturn(new ModerateurDtoOut(1L, "mod123", "mod@example.com", "0612345678"));
 
         ModerateurDtoOut result = moderateurService.seConnecter("mod@example.com", "modpassword");
 
@@ -99,6 +108,7 @@ class ModerateurServiceTest {
     @DisplayName("Should find moderator by id")
     void testTrouverParId() {
         when(moderateurPort.findById(1L)).thenReturn(Optional.of(moderateur));
+        when(moderateurMapper.toDto(any(Moderateur.class))).thenReturn(new ModerateurDtoOut(1L, "mod123", "mod@example.com", "0612345678"));
 
         ModerateurDtoOut result = moderateurService.trouverParId(1L);
 
@@ -144,7 +154,9 @@ class ModerateurServiceTest {
         when(genrePort.findById(1L)).thenReturn(Optional.of(genre));
         when(editeurPort.findById(1L)).thenReturn(Optional.of(editeur));
         when(classificationPort.findById(1L)).thenReturn(Optional.of(classification));
+        when(jeuMapper.toDomain(any(JeuDtoIn.class), any(), any(), any(), anyList())).thenReturn(jeu);
         when(jeuPort.save(any(Jeu.class))).thenReturn(jeu);
+        when(jeuMapper.toDto(any(Jeu.class))).thenReturn(new JeuDtoOut(1L, "New Game", "Description", "image.jpg", 59.99f, LocalDate.now(), "RPG", "Ubisoft", "PEGI 12", List.of()));
 
         JeuDtoOut result = moderateurService.ajouterJeu(1L, jeuDto);
 

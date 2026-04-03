@@ -4,6 +4,7 @@ import fr.esgi.avis.business.*;
 import fr.esgi.avis.dto.in.JeuDtoIn;
 import fr.esgi.avis.dto.out.JeuDtoOut;
 import fr.esgi.avis.port.out.*;
+import fr.esgi.avis.mapper.JeuMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -38,6 +39,9 @@ class JeuServiceTest {
 
     @Mock
     private PlateformePort plateformePort;
+
+    @Mock
+    private JeuMapper jeuMapper;
 
     @InjectMocks
     private JeuService jeuService;
@@ -77,7 +81,9 @@ class JeuServiceTest {
         when(genrePort.findById(1L)).thenReturn(Optional.of(genre));
         when(editeurPort.findById(1L)).thenReturn(Optional.of(editeur));
         when(classificationPort.findById(1L)).thenReturn(Optional.of(classification));
+        when(jeuMapper.toDomain(any(JeuDtoIn.class), any(), any(), any(), anyList())).thenReturn(jeu);
         when(jeuPort.save(any(Jeu.class))).thenReturn(jeu);
+        when(jeuMapper.toDto(any(Jeu.class))).thenReturn(new JeuDtoOut(1L, "Baldur's Gate 3", "A fantasy RPG", "image.jpg", 59.99f, LocalDate.of(2023, 8, 3), "RPG", "Ubisoft", "PEGI 12", List.of()));
 
         JeuDtoOut result = jeuService.creerUnJeu(jeuDtoIn);
 
@@ -116,7 +122,9 @@ class JeuServiceTest {
         when(genrePort.findById(1L)).thenReturn(Optional.of(genre));
         when(editeurPort.findById(1L)).thenReturn(Optional.of(editeur));
         when(classificationPort.findById(1L)).thenReturn(Optional.of(classification));
+        when(jeuMapper.toDomain(any(JeuDtoIn.class), any(), any(), any(), anyList())).thenReturn(jeu);
         when(jeuPort.save(any(Jeu.class))).thenReturn(jeu);
+        when(jeuMapper.toDto(any(Jeu.class))).thenReturn(new JeuDtoOut(1L, "Baldur's Gate 3", "A fantasy RPG", "image.jpg", 59.99f, LocalDate.of(2023, 8, 3), "RPG", "Ubisoft", "PEGI 12", List.of()));
 
         JeuDtoOut result = jeuService.mettreAJourUnJeu(1L, jeuDtoIn);
 
@@ -139,6 +147,7 @@ class JeuServiceTest {
     @DisplayName("Should retrieve game by id")
     void testRecupererUnJeuParId() {
         when(jeuPort.findById(1L)).thenReturn(Optional.of(jeu));
+        when(jeuMapper.toDto(any(Jeu.class))).thenReturn(new JeuDtoOut(1L, "Baldur's Gate 3", "A fantasy RPG", "image.jpg", 59.99f, LocalDate.of(2023, 8, 3), "RPG", "Ubisoft", "PEGI 12", List.of()));
 
         JeuDtoOut result = jeuService.recupererUnJeuParId(1L);
 
@@ -164,6 +173,8 @@ class JeuServiceTest {
                 LocalDate.of(2022, 2, 25), editeur, classification, List.of());
 
         when(jeuPort.findAll()).thenReturn(List.of(jeu, jeu2));
+        when(jeuMapper.toDto(jeu)).thenReturn(new JeuDtoOut(1L, "Baldur's Gate 3", "A fantasy RPG", "image.jpg", 59.99f, LocalDate.of(2023, 8, 3), "RPG", "Ubisoft", "PEGI 12", List.of()));
+        when(jeuMapper.toDto(jeu2)).thenReturn(new JeuDtoOut(2L, "Elden Ring", "Action RPG", "image2.jpg", 59.99f, LocalDate.of(2022, 2, 25), "RPG", "Ubisoft", "PEGI 12", List.of()));
 
         List<JeuDtoOut> result = jeuService.recupererTousLesJeux();
 
@@ -176,6 +187,7 @@ class JeuServiceTest {
     @DisplayName("Should retrieve games by genre id")
     void testRecupererDesJeuxDUnGenre() {
         when(jeuPort.findAllByGenreId(1L)).thenReturn(List.of(jeu));
+        when(jeuMapper.toDto(jeu)).thenReturn(new JeuDtoOut(1L, "Baldur's Gate 3", "A fantasy RPG", "image.jpg", 59.99f, LocalDate.of(2023, 8, 3), "RPG", "Ubisoft", "PEGI 12", List.of()));
 
         List<JeuDtoOut> result = jeuService.recupererDesJeuxDUnGenre(1L);
 
@@ -188,6 +200,7 @@ class JeuServiceTest {
     @DisplayName("Should retrieve games by publisher id")
     void testRecupererDesJeuxDUnEditeur() {
         when(jeuPort.findAllByEditeurId(1L)).thenReturn(List.of(jeu));
+        when(jeuMapper.toDto(jeu)).thenReturn(new JeuDtoOut(1L, "Baldur's Gate 3", "A fantasy RPG", "image.jpg", 59.99f, LocalDate.of(2023, 8, 3), "RPG", "Ubisoft", "PEGI 12", List.of()));
 
         List<JeuDtoOut> result = jeuService.recupererDesJeuxDUnEditeur(1L);
 

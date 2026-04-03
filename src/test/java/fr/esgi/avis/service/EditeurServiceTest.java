@@ -3,6 +3,7 @@ package fr.esgi.avis.service;
 import fr.esgi.avis.business.Editeur;
 import fr.esgi.avis.dto.in.EditeurDtoIn;
 import fr.esgi.avis.dto.out.EditeurDtoOut;
+import fr.esgi.avis.mapper.EditeurMapper;
 import fr.esgi.avis.port.out.EditeurPort;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -26,6 +27,9 @@ class EditeurServiceTest {
     @Mock
     private EditeurPort editeurPort;
 
+    @Mock
+    private EditeurMapper editeurMapper;
+
     @InjectMocks
     private EditeurService editeurService;
 
@@ -41,7 +45,9 @@ class EditeurServiceTest {
     @Test
     @DisplayName("Should create a new publisher")
     void testCreerUnEditeur() {
+        when(editeurMapper.toDomain(any(EditeurDtoIn.class))).thenReturn(editeur);
         when(editeurPort.save(any(Editeur.class))).thenReturn(editeur);
+        when(editeurMapper.toDto(any(Editeur.class))).thenReturn(new EditeurDtoOut(1L, "Ubisoft"));
 
         EditeurDtoOut result = editeurService.creerUnEditeur(editeurDtoIn);
 
@@ -58,6 +64,7 @@ class EditeurServiceTest {
 
         when(editeurPort.findById(1L)).thenReturn(Optional.of(editeur));
         when(editeurPort.save(any(Editeur.class))).thenReturn(updatedEditeur);
+        when(editeurMapper.toDto(any(Editeur.class))).thenReturn(new EditeurDtoOut(1L, "Rockstar Games"));
 
         EditeurDtoOut result = editeurService.mettreAJour(1L, updateDto);
 
@@ -81,6 +88,7 @@ class EditeurServiceTest {
     @DisplayName("Should retrieve publisher by id")
     void testRecupererUnEditeurParId() {
         when(editeurPort.findById(1L)).thenReturn(Optional.of(editeur));
+        when(editeurMapper.toDto(any(Editeur.class))).thenReturn(new EditeurDtoOut(1L, "Ubisoft"));
 
         EditeurDtoOut result = editeurService.recupererUnEditeurParId(1L);
 
@@ -104,6 +112,8 @@ class EditeurServiceTest {
     void testRecupererTousLesEditeurs() {
         Editeur editeur2 = new Editeur(2L, "EA Sports", List.of());
         when(editeurPort.findAll()).thenReturn(List.of(editeur, editeur2));
+        when(editeurMapper.toDto(editeur)).thenReturn(new EditeurDtoOut(1L, "Ubisoft"));
+        when(editeurMapper.toDto(editeur2)).thenReturn(new EditeurDtoOut(2L, "EA Sports"));
 
         List<EditeurDtoOut> result = editeurService.recupererTousLesEditeurs();
 
@@ -120,4 +130,3 @@ class EditeurServiceTest {
         verify(editeurPort, times(1)).deleteById(1L);
     }
 }
-

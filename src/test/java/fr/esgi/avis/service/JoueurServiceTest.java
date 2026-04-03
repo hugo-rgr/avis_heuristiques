@@ -5,6 +5,8 @@ import fr.esgi.avis.business.Joueur;
 import fr.esgi.avis.dto.in.JoueurDtoIn;
 import fr.esgi.avis.dto.out.AvisDtoOut;
 import fr.esgi.avis.dto.out.JoueurDtoOut;
+import fr.esgi.avis.mapper.AvisMapper;
+import fr.esgi.avis.mapper.JoueurMapper;
 import fr.esgi.avis.port.out.AvisPort;
 import fr.esgi.avis.port.out.JeuPort;
 import fr.esgi.avis.port.out.JoueurPort;
@@ -37,6 +39,12 @@ class JoueurServiceTest {
     @Mock
     private JeuPort jeuPort;
 
+    @Mock
+    private JoueurMapper joueurMapper;
+
+    @Mock
+    private AvisMapper avisMapper;
+
     @InjectMocks
     private JoueurService joueurService;
 
@@ -58,6 +66,7 @@ class JoueurServiceTest {
     @DisplayName("Should connect player with correct credentials")
     void testSeConnecter() {
         when(joueurPort.findByEmail("gamer@example.com")).thenReturn(Optional.of(joueur));
+        when(joueurMapper.toDto(any(Joueur.class))).thenReturn(new JoueurDtoOut(1L, "gamer123", "gamer@example.com", LocalDate.of(1995, 5, 15), null));
 
         JoueurDtoOut result = joueurService.seConnecter("gamer@example.com", "password123");
 
@@ -96,7 +105,9 @@ class JoueurServiceTest {
         newJoueur.setEmail("newgamer@example.com");
         newJoueur.setMotDePasse("newpassword");
 
+        when(joueurMapper.toDomain(any(JoueurDtoIn.class))).thenReturn(newJoueur);
         when(joueurPort.save(any(Joueur.class))).thenReturn(newJoueur);
+        when(joueurMapper.toDto(any(Joueur.class))).thenReturn(new JoueurDtoOut(2L, "newgamer", "newgamer@example.com", LocalDate.of(2000, 1, 1), null));
 
         JoueurDtoIn newDtoIn = new JoueurDtoIn("newgamer", "newgamer@example.com", "newpassword", LocalDate.of(2000, 1, 1));
         JoueurDtoOut result = joueurService.sInscrire(newDtoIn);
@@ -121,6 +132,7 @@ class JoueurServiceTest {
     @DisplayName("Should retrieve player by id")
     void testTrouverParId() {
         when(joueurPort.findById(1L)).thenReturn(Optional.of(joueur));
+        when(joueurMapper.toDto(any(Joueur.class))).thenReturn(new JoueurDtoOut(1L, "gamer123", "gamer@example.com", LocalDate.of(1995, 5, 15), null));
 
         JoueurDtoOut result = joueurService.trouverParId(1L);
 
@@ -146,6 +158,8 @@ class JoueurServiceTest {
         Avis avis2 = new Avis(2L, "Awesome!", null, joueur, 9.0f, null, LocalDate.now());
 
         when(avisPort.findAllByJoueurId(1L)).thenReturn(List.of(avis1, avis2));
+        when(avisMapper.toDto(avis1)).thenReturn(new AvisDtoOut(1L, "Great game!", 9.5f, null, "gamer123", null, LocalDate.now()));
+        when(avisMapper.toDto(avis2)).thenReturn(new AvisDtoOut(2L, "Awesome!", 9.0f, null, "gamer123", null, LocalDate.now()));
 
         List<AvisDtoOut> result = joueurService.listerAvisDuJoueur(1L);
 

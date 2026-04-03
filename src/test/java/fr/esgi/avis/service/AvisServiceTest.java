@@ -3,6 +3,7 @@ package fr.esgi.avis.service;
 import fr.esgi.avis.business.*;
 import fr.esgi.avis.dto.in.AvisDtoIn;
 import fr.esgi.avis.dto.out.AvisDtoOut;
+import fr.esgi.avis.mapper.AvisMapper;
 import fr.esgi.avis.port.out.AvisPort;
 import fr.esgi.avis.port.out.JeuPort;
 import fr.esgi.avis.port.out.JoueurPort;
@@ -40,6 +41,9 @@ class AvisServiceTest {
     @Mock
     private ModerateurPort moderateurPort;
 
+    @Mock
+    private AvisMapper avisMapper;
+
     @InjectMocks
     private AvisService avisService;
 
@@ -76,7 +80,9 @@ class AvisServiceTest {
     void testCreerUnAvis() {
         when(jeuPort.findById(1L)).thenReturn(Optional.of(jeu));
         when(joueurPort.findById(1L)).thenReturn(Optional.of(joueur));
+        when(avisMapper.toDomain(any(AvisDtoIn.class), any(Jeu.class), any(Joueur.class), any())).thenReturn(avis);
         when(avisPort.save(any(Avis.class))).thenReturn(avis);
+        when(avisMapper.toDto(any(Avis.class))).thenReturn(new AvisDtoOut(1L, "Great game!", 9.5f, "Baldur's Gate 3", "gamer123", null, LocalDate.now()));
 
         AvisDtoOut result = avisService.creerUnAvis(avisDtoIn);
 
@@ -103,7 +109,9 @@ class AvisServiceTest {
         when(avisPort.findById(1L)).thenReturn(Optional.of(avis));
         when(jeuPort.findById(1L)).thenReturn(Optional.of(jeu));
         when(joueurPort.findById(1L)).thenReturn(Optional.of(joueur));
+        when(avisMapper.toDomain(any(AvisDtoIn.class), any(Jeu.class), any(Joueur.class), any())).thenReturn(avis);
         when(avisPort.save(any(Avis.class))).thenReturn(avis);
+        when(avisMapper.toDto(any(Avis.class))).thenReturn(new AvisDtoOut(1L, "Great game!", 9.5f, "Baldur's Gate 3", "gamer123", null, LocalDate.now()));
 
         AvisDtoOut result = avisService.mettreAJourUnAvis(1L, avisDtoIn);
 
@@ -126,6 +134,7 @@ class AvisServiceTest {
     @DisplayName("Should retrieve review by id")
     void testRecupererUnAvisParId() {
         when(avisPort.findById(1L)).thenReturn(Optional.of(avis));
+        when(avisMapper.toDto(any(Avis.class))).thenReturn(new AvisDtoOut(1L, "Great game!", 9.5f, "Baldur's Gate 3", "gamer123", null, LocalDate.now()));
 
         AvisDtoOut result = avisService.recupererUnAvisParId(1L);
 
@@ -149,6 +158,8 @@ class AvisServiceTest {
     void testRecupererTousLesAvis() {
         Avis avis2 = new Avis(2L, "Awesome!", jeu, joueur, 9.0f, null, LocalDate.now());
         when(avisPort.findAll()).thenReturn(List.of(avis, avis2));
+        when(avisMapper.toDto(avis)).thenReturn(new AvisDtoOut(1L, "Great game!", 9.5f, "Baldur's Gate 3", "gamer123", null, LocalDate.now()));
+        when(avisMapper.toDto(avis2)).thenReturn(new AvisDtoOut(2L, "Awesome!", 9.0f, "Baldur's Gate 3", "gamer123", null, LocalDate.now()));
 
         List<AvisDtoOut> result = avisService.recupererTousLesAvis();
 
@@ -161,6 +172,7 @@ class AvisServiceTest {
     @DisplayName("Should retrieve reviews by game id")
     void testRecupererTousLesAvisParJeu() {
         when(avisPort.findAllByJeuId(1L)).thenReturn(List.of(avis));
+        when(avisMapper.toDto(avis)).thenReturn(new AvisDtoOut(1L, "Great game!", 9.5f, "Baldur's Gate 3", "gamer123", null, LocalDate.now()));
 
         List<AvisDtoOut> result = avisService.recupererTousLesAvisParJeu(1L);
 
@@ -173,6 +185,7 @@ class AvisServiceTest {
     @DisplayName("Should retrieve reviews by player id")
     void testRecupererTousLesAvisParJoueur() {
         when(avisPort.findAllByJoueurId(1L)).thenReturn(List.of(avis));
+        when(avisMapper.toDto(avis)).thenReturn(new AvisDtoOut(1L, "Great game!", 9.5f, "Baldur's Gate 3", "gamer123", null, LocalDate.now()));
 
         List<AvisDtoOut> result = avisService.recupererTousLesAvisParJoueur(1L);
 

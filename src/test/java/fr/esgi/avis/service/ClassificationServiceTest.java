@@ -3,6 +3,7 @@ package fr.esgi.avis.service;
 import fr.esgi.avis.business.Classification;
 import fr.esgi.avis.dto.in.ClassificationDtoIn;
 import fr.esgi.avis.dto.out.ClassificationDtoOut;
+import fr.esgi.avis.mapper.ClassificationMapper;
 import fr.esgi.avis.port.out.ClassificationPort;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -26,6 +27,9 @@ class ClassificationServiceTest {
     @Mock
     private ClassificationPort classificationPort;
 
+    @Mock
+    private ClassificationMapper classificationMapper;
+
     @InjectMocks
     private ClassificationService classificationService;
 
@@ -41,7 +45,9 @@ class ClassificationServiceTest {
     @Test
     @DisplayName("Should create a new classification")
     void testCreerUneClassification() {
+        when(classificationMapper.toDomain(any(ClassificationDtoIn.class))).thenReturn(classification);
         when(classificationPort.save(any(Classification.class))).thenReturn(classification);
+        when(classificationMapper.toDto(any(Classification.class))).thenReturn(new ClassificationDtoOut(1L, "PEGI 12", "FFFFFF"));
 
         ClassificationDtoOut result = classificationService.creerUneClassification(classificationDtoIn);
 
@@ -58,6 +64,7 @@ class ClassificationServiceTest {
 
         when(classificationPort.findById(1L)).thenReturn(Optional.of(classification));
         when(classificationPort.save(any(Classification.class))).thenReturn(updatedClassification);
+        when(classificationMapper.toDto(any(Classification.class))).thenReturn(new ClassificationDtoOut(1L, "PEGI 18", "000000"));
 
         ClassificationDtoOut result = classificationService.mettreAJourUneClassification(1L, updateDto);
 
@@ -81,6 +88,7 @@ class ClassificationServiceTest {
     @DisplayName("Should retrieve classification by id")
     void testRecupererUneClassificationParId() {
         when(classificationPort.findById(1L)).thenReturn(Optional.of(classification));
+        when(classificationMapper.toDto(any(Classification.class))).thenReturn(new ClassificationDtoOut(1L, "PEGI 12", "FFFFFF"));
 
         ClassificationDtoOut result = classificationService.recupererUneClassificationParId(1L);
 
@@ -104,6 +112,8 @@ class ClassificationServiceTest {
     void testRecupererToutesLesClassifications() {
         Classification classification2 = new Classification(2L, "PEGI 16", List.of(), "CCCCCC");
         when(classificationPort.findAll()).thenReturn(List.of(classification, classification2));
+        when(classificationMapper.toDto(classification)).thenReturn(new ClassificationDtoOut(1L, "PEGI 12", "FFFFFF"));
+        when(classificationMapper.toDto(classification2)).thenReturn(new ClassificationDtoOut(2L, "PEGI 16", "CCCCCC"));
 
         List<ClassificationDtoOut> result = classificationService.recupererToutesLesClassifications();
 

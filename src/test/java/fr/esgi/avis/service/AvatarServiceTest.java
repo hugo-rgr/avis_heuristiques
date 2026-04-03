@@ -4,6 +4,7 @@ import fr.esgi.avis.business.Avatar;
 import fr.esgi.avis.business.Joueur;
 import fr.esgi.avis.dto.in.AvatarDtoIn;
 import fr.esgi.avis.dto.out.AvatarDtoOut;
+import fr.esgi.avis.mapper.AvatarMapper;
 import fr.esgi.avis.port.out.AvatarPort;
 import fr.esgi.avis.port.out.JoueurPort;
 import org.junit.jupiter.api.BeforeEach;
@@ -32,6 +33,9 @@ class AvatarServiceTest {
     @Mock
     private JoueurPort joueurPort;
 
+    @Mock
+    private AvatarMapper avatarMapper;
+
     @InjectMocks
     private AvatarService avatarService;
 
@@ -53,7 +57,9 @@ class AvatarServiceTest {
     @DisplayName("Should create a new avatar")
     void testCreerUnAvatar() {
         when(joueurPort.findById(1L)).thenReturn(Optional.of(joueur));
+        when(avatarMapper.toDomain(any(AvatarDtoIn.class), any(Joueur.class))).thenReturn(avatar);
         when(avatarPort.save(any(Avatar.class))).thenReturn(avatar);
+        when(avatarMapper.toDto(any(Avatar.class))).thenReturn(new AvatarDtoOut(1L, "Knight Avatar", 1L, "gamer123"));
 
         AvatarDtoOut result = avatarService.creerUnAvatar(avatarDtoIn);
 
@@ -83,7 +89,9 @@ class AvatarServiceTest {
 
         when(avatarPort.findById(1L)).thenReturn(Optional.of(avatar));
         when(joueurPort.findById(1L)).thenReturn(Optional.of(joueur));
+        when(avatarMapper.toDomain(any(AvatarDtoIn.class), any(Joueur.class))).thenReturn(updatedAvatar);
         when(avatarPort.save(any(Avatar.class))).thenReturn(updatedAvatar);
+        when(avatarMapper.toDto(any(Avatar.class))).thenReturn(new AvatarDtoOut(1L, "Wizard Avatar", 1L, "gamer123"));
 
         AvatarDtoOut result = avatarService.mettreAJour(1L, updateDto);
 
@@ -107,6 +115,7 @@ class AvatarServiceTest {
     @DisplayName("Should retrieve avatar by id")
     void testRecupererUnAvatarParId() {
         when(avatarPort.findById(1L)).thenReturn(Optional.of(avatar));
+        when(avatarMapper.toDto(any(Avatar.class))).thenReturn(new AvatarDtoOut(1L, "Knight Avatar", 1L, "gamer123"));
 
         AvatarDtoOut result = avatarService.recupererUnAvatarParId(1L);
 
@@ -134,6 +143,8 @@ class AvatarServiceTest {
 
         Avatar avatar2 = new Avatar(2L, "Dragon Avatar", joueur2);
         when(avatarPort.findAll()).thenReturn(List.of(avatar, avatar2));
+        when(avatarMapper.toDto(avatar)).thenReturn(new AvatarDtoOut(1L, "Knight Avatar", 1L, "gamer123"));
+        when(avatarMapper.toDto(avatar2)).thenReturn(new AvatarDtoOut(2L, "Dragon Avatar", 2L, "player456"));
 
         List<AvatarDtoOut> result = avatarService.recupererTousLesAvatars();
 
@@ -146,6 +157,7 @@ class AvatarServiceTest {
     @DisplayName("Should retrieve avatars by player id")
     void testRecupererAvatarsParJoueur() {
         when(avatarPort.findAllByJoueurId(1L)).thenReturn(List.of(avatar));
+        when(avatarMapper.toDto(avatar)).thenReturn(new AvatarDtoOut(1L, "Knight Avatar", 1L, "gamer123"));
 
         List<AvatarDtoOut> result = avatarService.recupererAvatarsParJoueur(1L);
 
@@ -162,4 +174,3 @@ class AvatarServiceTest {
         verify(avatarPort, times(1)).deleteById(1L);
     }
 }
-

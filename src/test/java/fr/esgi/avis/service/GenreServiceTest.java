@@ -3,6 +3,7 @@ package fr.esgi.avis.service;
 import fr.esgi.avis.business.Genre;
 import fr.esgi.avis.dto.in.GenreDtoIn;
 import fr.esgi.avis.dto.out.GenreDtoOut;
+import fr.esgi.avis.mapper.GenreMapper;
 import fr.esgi.avis.port.out.GenrePort;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -26,6 +27,9 @@ class GenreServiceTest {
     @Mock
     private GenrePort genrePort;
 
+    @Mock
+    private GenreMapper genreMapper;
+
     @InjectMocks
     private GenreService genreService;
 
@@ -41,7 +45,9 @@ class GenreServiceTest {
     @Test
     @DisplayName("Should create a new genre successfully")
     void testCreerUnGenre() {
+        when(genreMapper.toDomain(any(GenreDtoIn.class))).thenReturn(genre);
         when(genrePort.save(any(Genre.class))).thenReturn(genre);
+        when(genreMapper.toDto(any(Genre.class))).thenReturn(new GenreDtoOut(1L, "RPG"));
 
         GenreDtoOut result = genreService.creerUnGenre(genreDtoIn);
 
@@ -58,6 +64,7 @@ class GenreServiceTest {
 
         when(genrePort.findById(1L)).thenReturn(Optional.of(genre));
         when(genrePort.save(any(Genre.class))).thenReturn(updatedGenre);
+        when(genreMapper.toDto(any(Genre.class))).thenReturn(new GenreDtoOut(1L, "Action RPG"));
 
         GenreDtoOut result = genreService.mettreAJourUnGenre(1L, updateDto);
 
@@ -82,6 +89,7 @@ class GenreServiceTest {
     @DisplayName("Should retrieve genre by id")
     void testRecupererUnGenreParId() {
         when(genrePort.findById(1L)).thenReturn(Optional.of(genre));
+        when(genreMapper.toDto(any(Genre.class))).thenReturn(new GenreDtoOut(1L, "RPG"));
 
         GenreDtoOut result = genreService.recupererUnGenreParId(1L);
 
@@ -106,6 +114,8 @@ class GenreServiceTest {
     void testRecupererTouslesGenre() {
         Genre genre2 = new Genre(2L, "Adventure", List.of());
         when(genrePort.findAll()).thenReturn(List.of(genre, genre2));
+        when(genreMapper.toDto(genre)).thenReturn(new GenreDtoOut(1L, "RPG"));
+        when(genreMapper.toDto(genre2)).thenReturn(new GenreDtoOut(2L, "Adventure"));
 
         List<GenreDtoOut> result = genreService.recupererTouslesGenre();
 
@@ -133,4 +143,3 @@ class GenreServiceTest {
         verify(genrePort, times(1)).deleteById(1L);
     }
 }
-

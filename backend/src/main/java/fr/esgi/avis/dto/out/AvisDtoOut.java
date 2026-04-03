@@ -1,7 +1,5 @@
 package fr.esgi.avis.dto.out;
 
-import fr.esgi.avis.business.Avis;
-
 import java.io.Serializable;
 import java.time.LocalDate;
 

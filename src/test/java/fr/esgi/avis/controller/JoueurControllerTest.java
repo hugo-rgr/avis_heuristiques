@@ -74,22 +74,6 @@ class JoueurControllerTest {
     }
 
     @Test
-    @DisplayName("Should connect player and return OK status")
-    void testSeConnecter() throws Exception {
-        when(joueurUseCase.seConnecter("gamer@example.com", "password123")).thenReturn(joueurDtoOut);
-
-        mockMvc.perform(post("/api/joueurs/connexion")
-                .param("email", "gamer@example.com")
-                .param("motDePasse", "password123")
-                .contentType("application/json"))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.id").value(1))
-                .andExpect(jsonPath("$.pseudo").value("gamer123"));
-
-        verify(joueurUseCase, times(1)).seConnecter("gamer@example.com", "password123");
-    }
-
-    @Test
     @DisplayName("Should retrieve player by id and return OK status")
     void testTrouverParId() throws Exception {
         when(joueurUseCase.trouverParId(1L)).thenReturn(joueurDtoOut);

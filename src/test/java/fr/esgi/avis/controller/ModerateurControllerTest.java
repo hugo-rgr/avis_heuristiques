@@ -66,22 +66,6 @@ class ModerateurControllerTest {
     }
 
     @Test
-    @DisplayName("Should connect moderator and return OK status")
-    void testSeConnecter() throws Exception {
-        when(moderateurUseCase.seConnecter("mod@example.com", "password")).thenReturn(moderateurDtoOut);
-
-        mockMvc.perform(post("/api/moderateurs/connexion")
-                .param("email", "mod@example.com")
-                .param("motDePasse", "password")
-                .contentType("application/json"))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.id").value(1))
-                .andExpect(jsonPath("$.pseudo").value("mod123"));
-
-        verify(moderateurUseCase, times(1)).seConnecter("mod@example.com", "password");
-    }
-
-    @Test
     @DisplayName("Should find moderator by id and return OK status")
     void testTrouverParId() throws Exception {
         when(moderateurUseCase.trouverParId(1L)).thenReturn(moderateurDtoOut);

@@ -11,7 +11,6 @@ import java.util.List;
  * Port d'entrée - cas d'utilisation liés à l'authentification d'un Joueur.
  */
 public interface JoueurUseCase {
-    JoueurDtoOut seConnecter(String email, String motDePasse);
     JoueurDtoOut sInscrire(JoueurDtoIn joueurDtoIn);
     JoueurDtoOut trouverParId(Long id);
 

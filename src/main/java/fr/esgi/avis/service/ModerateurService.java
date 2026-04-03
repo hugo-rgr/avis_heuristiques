@@ -45,17 +45,6 @@ public class ModerateurService implements ModerateurUseCase {
 
     @Override
     @Transactional(readOnly = true)
-    public ModerateurDtoOut seConnecter(String email, String motDePasse) {
-        Moderateur moderateur = moderateurPort.findByEmail(email)
-                .orElseThrow(() -> new RuntimeException("Modérateur non trouvé pour l'email : " + email));
-        if (!moderateur.getMotDePasse().equals(motDePasse)) {
-            throw new RuntimeException("Mot de passe incorrect");
-        }
-        return moderateurMapper.toDto(moderateur);
-    }
-
-    @Override
-    @Transactional(readOnly = true)
     public ModerateurDtoOut trouverParId(Long id) {
         return moderateurPort.findById(id)
                 .map(moderateurMapper::toDto)

@@ -4,7 +4,7 @@ import fr.esgi.avis.business.*;
 import fr.esgi.avis.dto.in.JeuDtoIn;
 import fr.esgi.avis.dto.out.JeuDtoOut;
 import fr.esgi.avis.port.out.*;
-import fr.esgi.avis.use_case.JeuUseCase;
+import fr.esgi.avis.port.in.JeuUseCase;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 

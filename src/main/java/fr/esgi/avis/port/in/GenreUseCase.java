@@ -1,4 +1,4 @@
-package fr.esgi.avis.use_case;
+package fr.esgi.avis.port.in;
 
 import fr.esgi.avis.dto.in.GenreDtoIn;
 import fr.esgi.avis.dto.out.GenreDtoOut;

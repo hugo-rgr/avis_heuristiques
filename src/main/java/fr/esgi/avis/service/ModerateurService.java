@@ -5,7 +5,7 @@ import fr.esgi.avis.dto.in.JeuDtoIn;
 import fr.esgi.avis.dto.out.JeuDtoOut;
 import fr.esgi.avis.dto.out.ModerateurDtoOut;
 import fr.esgi.avis.port.out.*;
-import fr.esgi.avis.use_case.ModerateurUseCase;
+import fr.esgi.avis.port.in.ModerateurUseCase;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 

@@ -4,7 +4,7 @@ import fr.esgi.avis.dto.in.AvisDtoIn;
 import fr.esgi.avis.dto.in.JoueurDtoIn;
 import fr.esgi.avis.dto.out.AvisDtoOut;
 import fr.esgi.avis.dto.out.JoueurDtoOut;
-import fr.esgi.avis.use_case.JoueurUseCase;
+import fr.esgi.avis.port.in.JoueurUseCase;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

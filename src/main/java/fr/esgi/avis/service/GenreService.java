@@ -4,7 +4,7 @@ import fr.esgi.avis.business.Genre;
 import fr.esgi.avis.dto.in.GenreDtoIn;
 import fr.esgi.avis.dto.out.GenreDtoOut;
 import fr.esgi.avis.port.out.GenrePort;
-import fr.esgi.avis.use_case.GenreUseCase;
+import fr.esgi.avis.port.in.GenreUseCase;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 

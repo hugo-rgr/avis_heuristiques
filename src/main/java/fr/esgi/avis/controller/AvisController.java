@@ -2,7 +2,7 @@ package fr.esgi.avis.controller;
 
 import fr.esgi.avis.dto.in.AvisDtoIn;
 import fr.esgi.avis.dto.out.AvisDtoOut;
-import fr.esgi.avis.use_case.AvisUseCase;
+import fr.esgi.avis.port.in.AvisUseCase;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

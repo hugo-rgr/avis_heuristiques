@@ -4,7 +4,7 @@ import fr.esgi.avis.dto.in.ClassificationDtoIn;
 import fr.esgi.avis.dto.out.ClassificationDtoOut;
 import fr.esgi.avis.business.Classification;
 import fr.esgi.avis.port.out.ClassificationPort;
-import fr.esgi.avis.use_case.ClassificationUseCase;
+import fr.esgi.avis.port.in.ClassificationUseCase;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 

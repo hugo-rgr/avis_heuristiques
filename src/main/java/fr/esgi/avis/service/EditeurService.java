@@ -4,7 +4,7 @@ import fr.esgi.avis.business.Editeur;
 import fr.esgi.avis.dto.in.EditeurDtoIn;
 import fr.esgi.avis.dto.out.EditeurDtoOut;
 import fr.esgi.avis.port.out.EditeurPort;
-import fr.esgi.avis.use_case.EditeurUseCase;
+import fr.esgi.avis.port.in.EditeurUseCase;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 

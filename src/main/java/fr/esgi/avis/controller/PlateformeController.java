@@ -2,7 +2,7 @@ package fr.esgi.avis.controller;
 
 import fr.esgi.avis.dto.in.PlatefomeDtoIn;
 import fr.esgi.avis.dto.out.PlatefomeDtoOut;
-import fr.esgi.avis.use_case.PlateformeUseCase;
+import fr.esgi.avis.port.in.PlateformeUseCase;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

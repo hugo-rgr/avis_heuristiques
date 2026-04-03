@@ -6,7 +6,7 @@ import fr.esgi.avis.dto.in.AvatarDtoIn;
 import fr.esgi.avis.dto.out.AvatarDtoOut;
 import fr.esgi.avis.port.out.AvatarPort;
 import fr.esgi.avis.port.out.JoueurPort;
-import fr.esgi.avis.use_case.AvatarUseCase;
+import fr.esgi.avis.port.in.AvatarUseCase;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 

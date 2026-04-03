@@ -3,7 +3,7 @@ package fr.esgi.avis.controller;
 import fr.esgi.avis.dto.in.JeuDtoIn;
 import fr.esgi.avis.dto.out.JeuDtoOut;
 import fr.esgi.avis.dto.out.ModerateurDtoOut;
-import fr.esgi.avis.use_case.ModerateurUseCase;
+import fr.esgi.avis.port.in.ModerateurUseCase;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

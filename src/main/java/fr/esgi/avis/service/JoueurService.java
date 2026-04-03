@@ -10,7 +10,7 @@ import fr.esgi.avis.dto.out.JoueurDtoOut;
 import fr.esgi.avis.port.out.AvisPort;
 import fr.esgi.avis.port.out.JeuPort;
 import fr.esgi.avis.port.out.JoueurPort;
-import fr.esgi.avis.use_case.JoueurUseCase;
+import fr.esgi.avis.port.in.JoueurUseCase;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 

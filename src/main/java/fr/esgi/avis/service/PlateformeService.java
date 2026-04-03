@@ -4,7 +4,7 @@ import fr.esgi.avis.business.Plateforme;
 import fr.esgi.avis.dto.in.PlatefomeDtoIn;
 import fr.esgi.avis.dto.out.PlatefomeDtoOut;
 import fr.esgi.avis.port.out.PlateformePort;
-import fr.esgi.avis.use_case.PlateformeUseCase;
+import fr.esgi.avis.port.in.PlateformeUseCase;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 

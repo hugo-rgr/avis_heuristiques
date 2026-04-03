@@ -1,4 +1,4 @@
-package fr.esgi.avis.use_case;
+package fr.esgi.avis.port.in;
 
 import fr.esgi.avis.dto.in.PlatefomeDtoIn;
 import fr.esgi.avis.dto.out.PlatefomeDtoOut;
@@ -17,4 +17,3 @@ public interface PlateformeUseCase {
 
     void supprimerUnePlateforme(Long id);
 }
-

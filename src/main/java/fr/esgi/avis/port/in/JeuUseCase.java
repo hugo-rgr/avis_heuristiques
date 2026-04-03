@@ -1,4 +1,4 @@
-package fr.esgi.avis.use_case;
+package fr.esgi.avis.port.in;
 
 import fr.esgi.avis.dto.in.JeuDtoIn;
 import fr.esgi.avis.dto.out.JeuDtoOut;
@@ -9,7 +9,7 @@ public interface JeuUseCase {
 
     JeuDtoOut creerUnJeu(JeuDtoIn dto);
 
-    JeuDtoOut MettreAJourUnJeu(Long id, JeuDtoIn dto);
+    JeuDtoOut mettreAJourUnJeu(Long id, JeuDtoIn dto);
 
     JeuDtoOut recupererUnJeuParId(Long id);
 

@@ -1,4 +1,4 @@
-package fr.esgi.avis.use_case;
+package fr.esgi.avis.port.in;
 
 import fr.esgi.avis.dto.in.ClassificationDtoIn;
 import fr.esgi.avis.dto.out.ClassificationDtoOut;
@@ -14,5 +14,6 @@ public interface ClassificationUseCase {
     ClassificationDtoOut recupererUneClassificationParId(Long id);
 
     List<ClassificationDtoOut> recupererToutesLesClassifications();
+
     void supprimerUneClassification(Long id);
 }

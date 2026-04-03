@@ -1,4 +1,4 @@
-package fr.esgi.avis.use_case;
+package fr.esgi.avis.port.in;
 
 import fr.esgi.avis.dto.in.AvatarDtoIn;
 import fr.esgi.avis.dto.out.AvatarDtoOut;
@@ -19,4 +19,3 @@ public interface AvatarUseCase {
 
     void supprimerUnAvatar(Long id);
 }
-

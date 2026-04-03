@@ -1,4 +1,4 @@
-package fr.esgi.avis.use_case;
+package fr.esgi.avis.port.in;
 
 import fr.esgi.avis.dto.in.EditeurDtoIn;
 import fr.esgi.avis.dto.out.EditeurDtoOut;
@@ -9,7 +9,7 @@ public interface EditeurUseCase {
 
     EditeurDtoOut creerUnEditeur(EditeurDtoIn dto);
 
-    EditeurDtoOut mettreAJoueur(Long id, EditeurDtoIn dto);
+    EditeurDtoOut mettreAJour(Long id, EditeurDtoIn dto);
 
     EditeurDtoOut recupererUnEditeurParId(Long id);
 

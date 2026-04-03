@@ -4,8 +4,10 @@ import fr.esgi.avis.business.*;
 import fr.esgi.avis.dto.in.JeuDtoIn;
 import fr.esgi.avis.dto.out.JeuDtoOut;
 import fr.esgi.avis.dto.out.ModerateurDtoOut;
-import fr.esgi.avis.port.out.*;
+import fr.esgi.avis.mapper.JeuMapper;
+import fr.esgi.avis.mapper.ModerateurMapper;
 import fr.esgi.avis.port.in.ModerateurUseCase;
+import fr.esgi.avis.port.out.*;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -23,10 +25,13 @@ public class ModerateurService implements ModerateurUseCase {
     private final EditeurPort editeurPort;
     private final ClassificationPort classificationPort;
     private final PlateformePort plateformePort;
+    private final ModerateurMapper moderateurMapper;
+    private final JeuMapper jeuMapper;
 
     public ModerateurService(ModerateurPort moderateurPort, JeuPort jeuPort, AvisPort avisPort,
                              GenrePort genrePort, EditeurPort editeurPort,
-                             ClassificationPort classificationPort, PlateformePort plateformePort) {
+                             ClassificationPort classificationPort, PlateformePort plateformePort,
+                             ModerateurMapper moderateurMapper, JeuMapper jeuMapper) {
         this.moderateurPort = moderateurPort;
         this.jeuPort = jeuPort;
         this.avisPort = avisPort;
@@ -34,6 +39,8 @@ public class ModerateurService implements ModerateurUseCase {
         this.editeurPort = editeurPort;
         this.classificationPort = classificationPort;
         this.plateformePort = plateformePort;
+        this.moderateurMapper = moderateurMapper;
+        this.jeuMapper = jeuMapper;
     }
 
     @Override
@@ -44,14 +51,14 @@ public class ModerateurService implements ModerateurUseCase {
         if (!moderateur.getMotDePasse().equals(motDePasse)) {
             throw new RuntimeException("Mot de passe incorrect");
         }
-        return toDto(moderateur);
+        return moderateurMapper.toDto(moderateur);
     }
 
     @Override
     @Transactional(readOnly = true)
     public ModerateurDtoOut trouverParId(Long id) {
         return moderateurPort.findById(id)
-                .map(this::toDto)
+                .map(moderateurMapper::toDto)
                 .orElseThrow(() -> new RuntimeException("Modérateur non trouvé : " + id));
     }
 
@@ -59,8 +66,11 @@ public class ModerateurService implements ModerateurUseCase {
     public JeuDtoOut ajouterJeu(Long moderateurId, JeuDtoIn dto) {
         moderateurPort.findById(moderateurId)
                 .orElseThrow(() -> new RuntimeException("Modérateur non trouvé : " + moderateurId));
-        Jeu jeu = jeuPort.save(fromDto(dto));
-        return toJeuDto(jeu);
+        Genre genre = dto.genreId() != null ? genrePort.findById(dto.genreId()).orElseThrow(() -> new RuntimeException("Genre non trouvé : " + dto.genreId())) : null;
+        Editeur editeur = dto.editeurId() != null ? editeurPort.findById(dto.editeurId()).orElseThrow(() -> new RuntimeException("Editeur non trouvé : " + dto.editeurId())) : null;
+        Classification classification = dto.classificationId() != null ? classificationPort.findById(dto.classificationId()).orElseThrow(() -> new RuntimeException("Classification non trouvée : " + dto.classificationId())) : null;
+        List<Plateforme> plateformes = dto.plateformeIds() != null && !dto.plateformeIds().isEmpty() ? plateformePort.findAllByIds(dto.plateformeIds()) : Collections.emptyList();
+        return jeuMapper.toDto(jeuPort.save(jeuMapper.toDomain(dto, genre, editeur, classification, plateformes)));
     }
 
     @Override
@@ -70,36 +80,5 @@ public class ModerateurService implements ModerateurUseCase {
         avisPort.findById(avisId)
                 .orElseThrow(() -> new RuntimeException("Avis non trouvé : " + avisId));
         avisPort.deleteById(avisId);
-    }
-
-    private Jeu fromDto(JeuDtoIn dto) {
-        Genre genre = dto.genreId() != null
-                ? genrePort.findById(dto.genreId()).orElseThrow(() -> new RuntimeException("Genre non trouvé : " + dto.genreId()))
-                : null;
-        Editeur editeur = dto.editeurId() != null
-                ? editeurPort.findById(dto.editeurId()).orElseThrow(() -> new RuntimeException("Editeur non trouvé : " + dto.editeurId()))
-                : null;
-        Classification classification = dto.classificationId() != null
-                ? classificationPort.findById(dto.classificationId()).orElseThrow(() -> new RuntimeException("Classification non trouvée : " + dto.classificationId()))
-                : null;
-        List<Plateforme> plateformes = dto.plateformeIds() != null && !dto.plateformeIds().isEmpty()
-                ? plateformePort.findAllByIds(dto.plateformeIds())
-                : Collections.emptyList();
-        return new Jeu(null, dto.nom(), dto.description(), genre, dto.image(), dto.prix(), dto.dateDeSortie(), editeur, classification, plateformes);
-    }
-
-    private ModerateurDtoOut toDto(Moderateur m) {
-        return new ModerateurDtoOut(m.getId(), m.getPseudo(), m.getEmail(), m.getNumeroDeTelephone());
-    }
-
-    private JeuDtoOut toJeuDto(Jeu j) {
-        String genreNom = j.getGenre() != null ? j.getGenre().getNom() : null;
-        String editeurNom = j.getEditeur() != null ? j.getEditeur().getNom() : null;
-        String classificationNom = j.getClassification() != null ? j.getClassification().getNom() : null;
-        List<String> plateformes = j.getPlateformes() != null
-                ? j.getPlateformes().stream().map(Plateforme::getNom).toList()
-                : Collections.emptyList();
-        return new JeuDtoOut(j.getId(), j.getNom(), j.getDescription(), j.getImage(), j.getPrix(),
-                j.getDateDeSortie(), genreNom, editeurNom, classificationNom, plateformes);
     }
 }

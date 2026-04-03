@@ -12,6 +12,7 @@ import fr.esgi.avis.port.in.JoueurUseCase;
 import fr.esgi.avis.port.out.AvisPort;
 import fr.esgi.avis.port.out.JeuPort;
 import fr.esgi.avis.port.out.JoueurPort;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -26,25 +27,17 @@ public class JoueurService implements JoueurUseCase {
     private final JeuPort jeuPort;
     private final JoueurMapper joueurMapper;
     private final AvisMapper avisMapper;
+    private final PasswordEncoder passwordEncoder;
 
     public JoueurService(JoueurPort joueurPort, AvisPort avisPort, JeuPort jeuPort,
-                         JoueurMapper joueurMapper, AvisMapper avisMapper) {
+                         JoueurMapper joueurMapper, AvisMapper avisMapper,
+                         PasswordEncoder passwordEncoder) {
         this.joueurPort = joueurPort;
         this.avisPort = avisPort;
         this.jeuPort = jeuPort;
         this.joueurMapper = joueurMapper;
         this.avisMapper = avisMapper;
-    }
-
-    @Override
-    @Transactional(readOnly = true)
-    public JoueurDtoOut seConnecter(String email, String motDePasse) {
-        Joueur joueur = joueurPort.findByEmail(email)
-                .orElseThrow(() -> new RuntimeException("Joueur non trouvé pour l'email : " + email));
-        if (!joueur.getMotDePasse().equals(motDePasse)) {
-            throw new RuntimeException("Mot de passe incorrect");
-        }
-        return joueurMapper.toDto(joueur);
+        this.passwordEncoder = passwordEncoder;
     }
 
     @Override
@@ -52,7 +45,9 @@ public class JoueurService implements JoueurUseCase {
         if (joueurPort.existsByEmail(dto.email())) {
             throw new RuntimeException("Email déjà utilisé : " + dto.email());
         }
-        return joueurMapper.toDto(joueurPort.save(joueurMapper.toDomain(dto)));
+        Joueur joueur = joueurMapper.toDomain(dto);
+        joueur.setMotDePasse(passwordEncoder.encode(dto.motDePasse()));
+        return joueurMapper.toDto(joueurPort.save(joueur));
     }
 
     @Override

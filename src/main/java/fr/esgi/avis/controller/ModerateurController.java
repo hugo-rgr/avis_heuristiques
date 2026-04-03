@@ -18,11 +18,6 @@ public class ModerateurController {
         this.moderateurUseCase = moderateurUseCase;
     }
 
-    @PostMapping("/connexion")
-    public ResponseEntity<ModerateurDtoOut> seConnecter(@RequestParam String email, @RequestParam String motDePasse) {
-        return ResponseEntity.ok(moderateurUseCase.seConnecter(email, motDePasse));
-    }
-
     @GetMapping("/{id}")
     public ResponseEntity<ModerateurDtoOut> trouverParId(@PathVariable Long id) {
         return ResponseEntity.ok(moderateurUseCase.trouverParId(id));

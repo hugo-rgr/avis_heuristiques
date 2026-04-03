@@ -11,6 +11,7 @@ import fr.esgi.avis.port.out.AvisPort;
 import fr.esgi.avis.port.out.JeuPort;
 import fr.esgi.avis.port.out.JoueurPort;
 import org.junit.jupiter.api.BeforeEach;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -45,6 +46,9 @@ class JoueurServiceTest {
     @Mock
     private AvisMapper avisMapper;
 
+    @Mock
+    private PasswordEncoder passwordEncoder;
+
     @InjectMocks
     private JoueurService joueurService;
 
@@ -63,39 +67,6 @@ class JoueurServiceTest {
     }
 
     @Test
-    @DisplayName("Should connect player with correct credentials")
-    void testSeConnecter() {
-        when(joueurPort.findByEmail("gamer@example.com")).thenReturn(Optional.of(joueur));
-        when(joueurMapper.toDto(any(Joueur.class))).thenReturn(new JoueurDtoOut(1L, "gamer123", "gamer@example.com", LocalDate.of(1995, 5, 15), null));
-
-        JoueurDtoOut result = joueurService.seConnecter("gamer@example.com", "password123");
-
-        assertThat(result).isNotNull();
-        assertThat(result.pseudo()).isEqualTo("gamer123");
-        verify(joueurPort, times(1)).findByEmail("gamer@example.com");
-    }
-
-    @Test
-    @DisplayName("Should throw exception when email not found")
-    void testSeConnecterEmailNotFound() {
-        when(joueurPort.findByEmail("notfound@example.com")).thenReturn(Optional.empty());
-
-        assertThatThrownBy(() -> joueurService.seConnecter("notfound@example.com", "password123"))
-                .isInstanceOf(RuntimeException.class)
-                .hasMessageContaining("Joueur non trouvé");
-    }
-
-    @Test
-    @DisplayName("Should throw exception when password is incorrect")
-    void testSeConnecterWrongPassword() {
-        when(joueurPort.findByEmail("gamer@example.com")).thenReturn(Optional.of(joueur));
-
-        assertThatThrownBy(() -> joueurService.seConnecter("gamer@example.com", "wrongpassword"))
-                .isInstanceOf(RuntimeException.class)
-                .hasMessageContaining("Mot de passe incorrect");
-    }
-
-    @Test
     @DisplayName("Should register a new player successfully")
     void testSInscrire() {
         when(joueurPort.existsByEmail("newgamer@example.com")).thenReturn(false);
@@ -106,6 +77,7 @@ class JoueurServiceTest {
         newJoueur.setMotDePasse("newpassword");
 
         when(joueurMapper.toDomain(any(JoueurDtoIn.class))).thenReturn(newJoueur);
+        when(passwordEncoder.encode("newpassword")).thenReturn("$2a$10$hashedpassword");
         when(joueurPort.save(any(Joueur.class))).thenReturn(newJoueur);
         when(joueurMapper.toDto(any(Joueur.class))).thenReturn(new JoueurDtoOut(2L, "newgamer", "newgamer@example.com", LocalDate.of(2000, 1, 1), null));
 
@@ -115,6 +87,7 @@ class JoueurServiceTest {
         assertThat(result).isNotNull();
         assertThat(result.pseudo()).isEqualTo("newgamer");
         verify(joueurPort, times(1)).existsByEmail("newgamer@example.com");
+        verify(passwordEncoder, times(1)).encode("newpassword");
         verify(joueurPort, times(1)).save(any(Joueur.class));
     }
 

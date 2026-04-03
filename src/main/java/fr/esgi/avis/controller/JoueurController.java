@@ -26,11 +26,6 @@ public class JoueurController {
         return ResponseEntity.status(HttpStatus.CREATED).body(joueurUseCase.sInscrire(dto));
     }
 
-    @PostMapping("/connexion")
-    public ResponseEntity<JoueurDtoOut> seConnecter(@RequestParam String email, @RequestParam String motDePasse) {
-        return ResponseEntity.ok(joueurUseCase.seConnecter(email, motDePasse));
-    }
-
     @GetMapping("/{id}")
     public ResponseEntity<JoueurDtoOut> trouverParId(@PathVariable Long id) {
         return ResponseEntity.ok(joueurUseCase.trouverParId(id));

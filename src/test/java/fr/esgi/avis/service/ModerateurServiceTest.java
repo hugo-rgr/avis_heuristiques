@@ -72,39 +72,6 @@ class ModerateurServiceTest {
     }
 
     @Test
-    @DisplayName("Should connect moderator with correct credentials")
-    void testSeConnecter() {
-        when(moderateurPort.findByEmail("mod@example.com")).thenReturn(Optional.of(moderateur));
-        when(moderateurMapper.toDto(any(Moderateur.class))).thenReturn(new ModerateurDtoOut(1L, "mod123", "mod@example.com", "0612345678"));
-
-        ModerateurDtoOut result = moderateurService.seConnecter("mod@example.com", "modpassword");
-
-        assertThat(result).isNotNull();
-        assertThat(result.pseudo()).isEqualTo("mod123");
-        verify(moderateurPort, times(1)).findByEmail("mod@example.com");
-    }
-
-    @Test
-    @DisplayName("Should throw exception when moderator email not found")
-    void testSeConnecterEmailNotFound() {
-        when(moderateurPort.findByEmail("notfound@example.com")).thenReturn(Optional.empty());
-
-        assertThatThrownBy(() -> moderateurService.seConnecter("notfound@example.com", "password"))
-                .isInstanceOf(RuntimeException.class)
-                .hasMessageContaining("Modérateur non trouvé");
-    }
-
-    @Test
-    @DisplayName("Should throw exception when moderator password is incorrect")
-    void testSeConnecterWrongPassword() {
-        when(moderateurPort.findByEmail("mod@example.com")).thenReturn(Optional.of(moderateur));
-
-        assertThatThrownBy(() -> moderateurService.seConnecter("mod@example.com", "wrongpassword"))
-                .isInstanceOf(RuntimeException.class)
-                .hasMessageContaining("Mot de passe incorrect");
-    }
-
-    @Test
     @DisplayName("Should find moderator by id")
     void testTrouverParId() {
         when(moderateurPort.findById(1L)).thenReturn(Optional.of(moderateur));

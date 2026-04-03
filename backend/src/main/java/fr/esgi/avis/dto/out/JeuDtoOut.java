@@ -1,20 +1,18 @@
-package fr.esgi.avis.dto.in;
-
-import fr.esgi.avis.business.Jeu;
+package fr.esgi.avis.dto.out;
 
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.List;
 
-public record JeuDtoIn(
+public record JeuDtoOut(
         Long id,
         String nom,
         String description,
-        Long genreId,
         String image,
         float prix,
         LocalDate dateDeSortie,
-        Long editeurId,
-        Long classificationId,
-        List<Long> plateformeIds
+        String genreNom,
+        String editeurNom,
+        String classificationNom,
+        List<String> plateformes
 ) implements Serializable {}

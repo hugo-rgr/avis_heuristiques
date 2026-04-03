@@ -1,10 +1,8 @@
-package fr.esgi.avis.dto.out;
-
-import fr.esgi.avis.business.Genre;
+package fr.esgi.avis.dto.in;
 
 import java.io.Serializable;
 
-public record GenreDtoOut(
+public record EditeurDtoIn(
         Long id,
         String nom
 ) implements Serializable {}

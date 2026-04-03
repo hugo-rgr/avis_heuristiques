@@ -1,10 +1,9 @@
 package fr.esgi.avis.dto.in;
 
-import fr.esgi.avis.business.Genre;
-
 import java.io.Serializable;
 
-public record GenreDtoIn(
+public record ClassificationDtoIn(
         Long id,
-        String nom
+        String nom,
+        String couleurRGB
 ) implements Serializable {}

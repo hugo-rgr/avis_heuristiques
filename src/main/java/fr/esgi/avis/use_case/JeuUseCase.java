@@ -9,7 +9,7 @@ public interface JeuUseCase {
 
     JeuDtoOut creerUnJeu(JeuDtoIn dto);
 
-    JeuDtoOut MettreAJourUnJeu(Long id, JeuDtoIn dto);
+    JeuDtoOut mettreAJourUnJeu(Long id, JeuDtoIn dto);
 
     JeuDtoOut recupererUnJeuParId(Long id);
 

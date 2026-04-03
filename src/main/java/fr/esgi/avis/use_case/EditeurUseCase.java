@@ -9,7 +9,7 @@ public interface EditeurUseCase {
 
     EditeurDtoOut creerUnEditeur(EditeurDtoIn dto);
 
-    EditeurDtoOut mettreAJoueur(Long id, EditeurDtoIn dto);
+    EditeurDtoOut mettreAJour(Long id, EditeurDtoIn dto);
 
     EditeurDtoOut recupererUnEditeurParId(Long id);
 

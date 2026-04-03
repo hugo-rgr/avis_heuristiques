@@ -14,5 +14,6 @@ public interface ClassificationUseCase {
     ClassificationDtoOut recupererUneClassificationParId(Long id);
 
     List<ClassificationDtoOut> recupererToutesLesClassifications();
+
     void supprimerUneClassification(Long id);
 }

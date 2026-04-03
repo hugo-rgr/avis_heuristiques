@@ -3,12 +3,12 @@ package fr.esgi.avis.service;
 import fr.esgi.avis.business.Editeur;
 import fr.esgi.avis.dto.in.EditeurDtoIn;
 import fr.esgi.avis.dto.out.EditeurDtoOut;
-import fr.esgi.avis.port.out.EditeurPort;
+import fr.esgi.avis.mapper.EditeurMapper;
 import fr.esgi.avis.port.in.EditeurUseCase;
+import fr.esgi.avis.port.out.EditeurPort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Collections;
 import java.util.List;
 
 @Service
@@ -16,15 +16,16 @@ import java.util.List;
 public class EditeurService implements EditeurUseCase {
 
     private final EditeurPort editeurPort;
+    private final EditeurMapper editeurMapper;
 
-    public EditeurService(EditeurPort editeurPort) {
+    public EditeurService(EditeurPort editeurPort, EditeurMapper editeurMapper) {
         this.editeurPort = editeurPort;
+        this.editeurMapper = editeurMapper;
     }
 
     @Override
     public EditeurDtoOut creerUnEditeur(EditeurDtoIn dto) {
-        Editeur editeur = new Editeur(null, dto.nom(), Collections.emptyList());
-        return toDto(editeurPort.save(editeur));
+        return editeurMapper.toDto(editeurPort.save(editeurMapper.toDomain(dto)));
     }
 
     @Override
@@ -32,29 +33,25 @@ public class EditeurService implements EditeurUseCase {
         Editeur existing = editeurPort.findById(id)
                 .orElseThrow(() -> new RuntimeException("Editeur non trouvé : " + id));
         existing.setNom(dto.nom());
-        return toDto(editeurPort.save(existing));
+        return editeurMapper.toDto(editeurPort.save(existing));
     }
 
     @Override
     @Transactional(readOnly = true)
     public EditeurDtoOut recupererUnEditeurParId(Long id) {
         return editeurPort.findById(id)
-                .map(this::toDto)
+                .map(editeurMapper::toDto)
                 .orElseThrow(() -> new RuntimeException("Editeur non trouvé : " + id));
     }
 
     @Override
     @Transactional(readOnly = true)
     public List<EditeurDtoOut> recupererTousLesEditeurs() {
-        return editeurPort.findAll().stream().map(this::toDto).toList();
+        return editeurPort.findAll().stream().map(editeurMapper::toDto).toList();
     }
 
     @Override
     public void supprimerUnEditeur(Long id) {
         editeurPort.deleteById(id);
-    }
-
-    private EditeurDtoOut toDto(Editeur e) {
-        return new EditeurDtoOut(e.getId(), e.getNom());
     }
 }

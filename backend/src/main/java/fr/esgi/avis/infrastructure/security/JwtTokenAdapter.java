@@ -24,9 +24,10 @@ public class JwtTokenAdapter implements TokenPort {
     }
 
     @Override
-    public String generateToken(String email, String role) {
+    public String generateToken(Long id, String email, String role) {
         return Jwts.builder()
                 .subject(email)
+                .claim("id", id)
                 .claim("role", role)
                 .issuedAt(new Date())
                 .expiration(new Date(System.currentTimeMillis() + expiration))

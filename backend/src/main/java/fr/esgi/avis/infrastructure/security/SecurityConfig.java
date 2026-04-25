@@ -30,6 +30,13 @@ public class SecurityConfig {
                         .requestMatchers("/api/auth/**", "/api/joueurs/inscription").permitAll()
                         .requestMatchers("/h2-console/**", "/actuator/**",
                                 "/swagger-ui/**", "/swagger-ui.html", "/v3/api-docs/**").permitAll()
+                        .requestMatchers(org.springframework.http.HttpMethod.GET,
+                                "/api/jeux", "/api/jeux/**",
+                                "/api/avis", "/api/avis/**",
+                                "/api/genres", "/api/genres/**",
+                                "/api/editeurs", "/api/editeurs/**",
+                                "/api/classifications", "/api/classifications/**",
+                                "/api/plateformes", "/api/plateformes/**").permitAll()
                         .anyRequest().authenticated()
                 )
                 .headers(headers -> headers.frameOptions(frame -> frame.disable()))

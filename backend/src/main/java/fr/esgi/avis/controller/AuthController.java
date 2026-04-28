@@ -3,6 +3,7 @@ package fr.esgi.avis.controller;
 import fr.esgi.avis.dto.in.LoginDtoIn;
 import fr.esgi.avis.dto.out.TokenDtoOut;
 import fr.esgi.avis.port.in.AuthUseCase;
+import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -17,7 +18,7 @@ public class AuthController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<TokenDtoOut> login(@RequestBody LoginDtoIn dto) {
+    public ResponseEntity<TokenDtoOut> login(@Valid @RequestBody LoginDtoIn dto) {
         return ResponseEntity.ok(authUseCase.login(dto));
     }
 }

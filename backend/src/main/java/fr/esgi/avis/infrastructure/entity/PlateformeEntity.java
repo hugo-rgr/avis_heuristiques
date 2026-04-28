@@ -26,6 +26,9 @@ public class PlateformeEntity {
     @Column
     private LocalDate dateDeSortie;
 
+    @Version
+    private Long version;
+
     @ManyToMany(mappedBy = "plateformes", fetch = FetchType.LAZY)
     private List<JeuEntity> jeux = new ArrayList<>();
 }

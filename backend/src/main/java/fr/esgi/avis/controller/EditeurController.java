@@ -3,8 +3,10 @@ package fr.esgi.avis.controller;
 import fr.esgi.avis.dto.in.EditeurDtoIn;
 import fr.esgi.avis.dto.out.EditeurDtoOut;
 import fr.esgi.avis.port.in.EditeurUseCase;
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -20,12 +22,14 @@ public class EditeurController {
     }
 
     @PostMapping
-    public ResponseEntity<EditeurDtoOut> creerUnEditeur(@RequestBody EditeurDtoIn dto) {
+    @PreAuthorize("hasRole('MODERATEUR')")
+    public ResponseEntity<EditeurDtoOut> creerUnEditeur(@Valid @RequestBody EditeurDtoIn dto) {
         return ResponseEntity.status(HttpStatus.CREATED).body(editeurUseCase.creerUnEditeur(dto));
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<EditeurDtoOut> mettreAJour(@PathVariable Long id, @RequestBody EditeurDtoIn dto) {
+    @PreAuthorize("hasRole('MODERATEUR')")
+    public ResponseEntity<EditeurDtoOut> mettreAJour(@PathVariable Long id, @Valid @RequestBody EditeurDtoIn dto) {
         return ResponseEntity.ok(editeurUseCase.mettreAJour(id, dto));
     }
 
@@ -40,6 +44,7 @@ public class EditeurController {
     }
 
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasRole('MODERATEUR')")
     public ResponseEntity<Void> supprimerUnEditeur(@PathVariable Long id) {
         editeurUseCase.supprimerUnEditeur(id);
         return ResponseEntity.noContent().build();

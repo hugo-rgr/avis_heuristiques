@@ -3,6 +3,7 @@ package fr.esgi.avis.service;
 import fr.esgi.avis.business.Editeur;
 import fr.esgi.avis.dto.in.EditeurDtoIn;
 import fr.esgi.avis.dto.out.EditeurDtoOut;
+import fr.esgi.avis.exception.ResourceNotFoundException;
 import fr.esgi.avis.mapper.EditeurMapper;
 import fr.esgi.avis.port.in.EditeurUseCase;
 import fr.esgi.avis.port.out.EditeurPort;
@@ -31,7 +32,7 @@ public class EditeurService implements EditeurUseCase {
     @Override
     public EditeurDtoOut mettreAJour(Long id, EditeurDtoIn dto) {
         Editeur existing = editeurPort.findById(id)
-                .orElseThrow(() -> new RuntimeException("Editeur non trouvé : " + id));
+                .orElseThrow(() -> new ResourceNotFoundException("Editeur", id));
         existing.setNom(dto.nom());
         return editeurMapper.toDto(editeurPort.save(existing));
     }
@@ -41,7 +42,7 @@ public class EditeurService implements EditeurUseCase {
     public EditeurDtoOut recupererUnEditeurParId(Long id) {
         return editeurPort.findById(id)
                 .map(editeurMapper::toDto)
-                .orElseThrow(() -> new RuntimeException("Editeur non trouvé : " + id));
+                .orElseThrow(() -> new ResourceNotFoundException("Editeur", id));
     }
 
     @Override

@@ -23,4 +23,7 @@ public abstract class UtilisateurEntity {
 
     @Column(nullable = false)
     private String motDePasse;
+
+    @Version
+    private Long version;
 }

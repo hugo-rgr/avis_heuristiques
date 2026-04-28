@@ -3,8 +3,10 @@ package fr.esgi.avis.controller;
 import fr.esgi.avis.dto.in.ClassificationDtoIn;
 import fr.esgi.avis.dto.out.ClassificationDtoOut;
 import fr.esgi.avis.port.in.ClassificationUseCase;
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -20,12 +22,14 @@ public class ClassificationController {
     }
 
     @PostMapping
-    public ResponseEntity<ClassificationDtoOut> creerUneClassification(@RequestBody ClassificationDtoIn dto) {
+    @PreAuthorize("hasRole('MODERATEUR')")
+    public ResponseEntity<ClassificationDtoOut> creerUneClassification(@Valid @RequestBody ClassificationDtoIn dto) {
         return ResponseEntity.status(HttpStatus.CREATED).body(classificationUseCase.creerUneClassification(dto));
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<ClassificationDtoOut> mettreAJourUneClassification(@PathVariable Long id, @RequestBody ClassificationDtoIn dto) {
+    @PreAuthorize("hasRole('MODERATEUR')")
+    public ResponseEntity<ClassificationDtoOut> mettreAJourUneClassification(@PathVariable Long id, @Valid @RequestBody ClassificationDtoIn dto) {
         return ResponseEntity.ok(classificationUseCase.mettreAJourUneClassification(id, dto));
     }
 
@@ -40,6 +44,7 @@ public class ClassificationController {
     }
 
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasRole('MODERATEUR')")
     public ResponseEntity<Void> supprimerUneClassification(@PathVariable Long id) {
         classificationUseCase.supprimerUneClassification(id);
         return ResponseEntity.noContent().build();

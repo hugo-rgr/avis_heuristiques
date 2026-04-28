@@ -81,7 +81,7 @@ class ClassificationServiceTest {
 
         assertThatThrownBy(() -> classificationService.mettreAJourUneClassification(999L, classificationDtoIn))
                 .isInstanceOf(RuntimeException.class)
-                .hasMessageContaining("Classification non trouvée");
+                .hasMessageContaining("Classification non trouvé");
     }
 
     @Test
@@ -104,7 +104,7 @@ class ClassificationServiceTest {
 
         assertThatThrownBy(() -> classificationService.recupererUneClassificationParId(999L))
                 .isInstanceOf(RuntimeException.class)
-                .hasMessageContaining("Classification non trouvée");
+                .hasMessageContaining("Classification non trouvé");
     }
 
     @Test

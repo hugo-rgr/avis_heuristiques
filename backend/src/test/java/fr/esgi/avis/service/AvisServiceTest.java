@@ -61,7 +61,7 @@ class AvisServiceTest {
 
         jeu = new Jeu(1L, "Baldur's Gate 3", "Fantasy RPG", genre,
                 "bg3.jpg", 59.99f, LocalDate.of(2023, 8, 3),
-                editeur, classification, List.of());
+                editeur, classification, List.of(), null);
 
         joueur = new Joueur(List.of(), LocalDate.of(1995, 5, 15), null);
         joueur.setId(1L);
@@ -72,7 +72,7 @@ class AvisServiceTest {
         moderateur.setPseudo("mod123");
 
         avis = new Avis(1L, "Great game!", jeu, joueur, 9.5f, moderateur, LocalDate.now());
-        avisDtoIn = new AvisDtoIn(null, "Great game!", 1L, 1L, 9.5f, null, LocalDate.now());
+        avisDtoIn = new AvisDtoIn("Great game!", 1L, 1L, 9.5f, null, LocalDate.now());
     }
 
     @Test
@@ -97,7 +97,7 @@ class AvisServiceTest {
     void testCreerUnAvisJeuNotFound() {
         when(jeuPort.findById(999L)).thenReturn(Optional.empty());
 
-        AvisDtoIn dtoWithBadJeu = new AvisDtoIn(null, "Great game!", 999L, 1L, 9.5f, null, LocalDate.now());
+        AvisDtoIn dtoWithBadJeu = new AvisDtoIn("Great game!", 999L, 1L, 9.5f, null, LocalDate.now());
         assertThatThrownBy(() -> avisService.creerUnAvis(dtoWithBadJeu))
                 .isInstanceOf(RuntimeException.class)
                 .hasMessageContaining("Jeu non trouvé");
@@ -202,5 +202,3 @@ class AvisServiceTest {
         verify(avisPort, times(1)).deleteById(1L);
     }
 }
-
-//Generated with love by TestMe :) Please raise issues & feature requests at: https://weirddev.com/forum#!/testme

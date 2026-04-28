@@ -3,6 +3,7 @@ package fr.esgi.avis.service;
 import fr.esgi.avis.business.Genre;
 import fr.esgi.avis.dto.in.GenreDtoIn;
 import fr.esgi.avis.dto.out.GenreDtoOut;
+import fr.esgi.avis.exception.ResourceNotFoundException;
 import fr.esgi.avis.mapper.GenreMapper;
 import fr.esgi.avis.port.in.GenreUseCase;
 import fr.esgi.avis.port.out.GenrePort;
@@ -31,7 +32,7 @@ public class GenreService implements GenreUseCase {
     @Override
     public GenreDtoOut mettreAJourUnGenre(Long id, GenreDtoIn dto) {
         Genre existing = genrePort.findById(id)
-                .orElseThrow(() -> new RuntimeException("Genre non trouvé : " + id));
+                .orElseThrow(() -> new ResourceNotFoundException("Genre", id));
         existing.setNom(dto.nom());
         return genreMapper.toDto(genrePort.save(existing));
     }
@@ -41,7 +42,7 @@ public class GenreService implements GenreUseCase {
     public GenreDtoOut recupererUnGenreParId(Long id) {
         return genrePort.findById(id)
                 .map(genreMapper::toDto)
-                .orElseThrow(() -> new RuntimeException("Genre non trouvé : " + id));
+                .orElseThrow(() -> new ResourceNotFoundException("Genre", id));
     }
 
     @Override

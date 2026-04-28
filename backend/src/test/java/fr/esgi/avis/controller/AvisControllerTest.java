@@ -47,7 +47,7 @@ class AvisControllerTest {
         mockMvc = MockMvcBuilders.standaloneSetup(avisController).build();
         objectMapper = TestObjectMappers.objectMapper();
 
-        avisDtoIn = new AvisDtoIn(null, "Great game!", 1L, 1L, 9.5f, null, LocalDate.now());
+        avisDtoIn = new AvisDtoIn("Great game!", 1L, 1L, 9.5f, null, LocalDate.now());
         avisDtoOut = new AvisDtoOut(1L, "Great game!", 9.5f, "Game Name", "Player", null, LocalDate.now());
     }
 

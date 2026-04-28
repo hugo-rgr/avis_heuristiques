@@ -48,7 +48,6 @@ class JeuControllerTest {
         objectMapper = TestObjectMappers.objectMapper();
 
         jeuDtoIn = new JeuDtoIn(
-                null,
                 "Baldur's Gate 3",
                 "Fantasy RPG",
                 1L,
@@ -60,7 +59,7 @@ class JeuControllerTest {
                 List.of()
         );
         jeuDtoOut = new JeuDtoOut(1L, "Baldur's Gate 3", "Fantasy RPG", "bg3.jpg",
-                59.99f, LocalDate.of(2023, 8, 3), "RPG", "Larian Studios", "PEGI 16", List.of());
+                59.99f, LocalDate.of(2023, 8, 3), "RPG", "Larian Studios", "PEGI 16", List.of(), null);
     }
 
     @Test
@@ -112,7 +111,7 @@ class JeuControllerTest {
     @DisplayName("Should retrieve all games and return OK status")
     void testRecupererTousLesJeux() throws Exception {
         JeuDtoOut jeu2 = new JeuDtoOut(2L, "Elden Ring", "Action RPG", "er.jpg",
-                59.99f, LocalDate.of(2022, 2, 25), "Action", "FromSoftware", "PEGI 16", List.of());
+                59.99f, LocalDate.of(2022, 2, 25), "Action", "FromSoftware", "PEGI 16", List.of(), null);
         when(jeuUseCase.recupererTousLesJeux()).thenReturn(List.of(jeuDtoOut, jeu2));
 
         mockMvc.perform(get("/api/jeux")

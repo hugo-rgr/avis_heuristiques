@@ -22,6 +22,9 @@ public class GenreEntity {
     @Column(nullable = false, unique = true)
     private String nom;
 
+    @Version
+    private Long version;
+
     @OneToMany(mappedBy = "genre", fetch = FetchType.LAZY)
     private List<JeuEntity> jeux = new ArrayList<>();
 }

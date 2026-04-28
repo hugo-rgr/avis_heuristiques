@@ -14,5 +14,6 @@ public record JeuDtoOut(
         String genreNom,
         String editeurNom,
         String classificationNom,
-        List<String> plateformes
+        List<String> plateformes,
+        Double noteMoyenne
 ) implements Serializable {}

@@ -14,7 +14,13 @@ public interface AvatarMapper {
     @Mapping(source = "joueur.pseudo", target = "joueurPseudo")
     AvatarDtoOut toDto(Avatar avatar);
 
+    /** Chemin CRÉATION */
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "joueur", source = "joueur")
     Avatar toDomain(AvatarDtoIn dto, Joueur joueur);
+
+    /** Chemin MISE À JOUR : id propagé depuis le path variable */
+    @Mapping(target = "id", source = "id")
+    @Mapping(target = "joueur", source = "joueur")
+    Avatar toDomain(Long id, AvatarDtoIn dto, Joueur joueur);
 }

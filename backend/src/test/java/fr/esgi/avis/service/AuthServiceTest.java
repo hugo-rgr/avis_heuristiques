@@ -65,14 +65,14 @@ class AuthServiceTest {
     void testLoginJoueur() {
         when(joueurPort.findByEmail("gamer@example.com")).thenReturn(Optional.of(joueur));
         when(passwordEncoder.matches("password123", joueur.getMotDePasse())).thenReturn(true);
-        when(tokenPort.generateToken("gamer@example.com", "JOUEUR")).thenReturn("joueur.jwt.token");
+        when(tokenPort.generateToken("gamer@example.com", "JOUEUR", 1L)).thenReturn("joueur.jwt.token");
 
         TokenDtoOut result = authService.login(new LoginDtoIn("gamer@example.com", "password123"));
 
         assertThat(result).isNotNull();
         assertThat(result.token()).isEqualTo("joueur.jwt.token");
         assertThat(result.role()).isEqualTo("JOUEUR");
-        verify(tokenPort, times(1)).generateToken("gamer@example.com", "JOUEUR");
+        verify(tokenPort, times(1)).generateToken("gamer@example.com", "JOUEUR", 1L);
     }
 
     @Test
@@ -81,14 +81,14 @@ class AuthServiceTest {
         when(joueurPort.findByEmail("mod@example.com")).thenReturn(Optional.empty());
         when(moderateurPort.findByEmail("mod@example.com")).thenReturn(Optional.of(moderateur));
         when(passwordEncoder.matches("modpassword", moderateur.getMotDePasse())).thenReturn(true);
-        when(tokenPort.generateToken("mod@example.com", "MODERATEUR")).thenReturn("mod.jwt.token");
+        when(tokenPort.generateToken("mod@example.com", "MODERATEUR", 2L)).thenReturn("mod.jwt.token");
 
         TokenDtoOut result = authService.login(new LoginDtoIn("mod@example.com", "modpassword"));
 
         assertThat(result).isNotNull();
         assertThat(result.token()).isEqualTo("mod.jwt.token");
         assertThat(result.role()).isEqualTo("MODERATEUR");
-        verify(tokenPort, times(1)).generateToken("mod@example.com", "MODERATEUR");
+        verify(tokenPort, times(1)).generateToken("mod@example.com", "MODERATEUR", 2L);
     }
 
     @Test

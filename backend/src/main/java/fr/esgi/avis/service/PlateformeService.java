@@ -3,6 +3,7 @@ package fr.esgi.avis.service;
 import fr.esgi.avis.business.Plateforme;
 import fr.esgi.avis.dto.in.PlatefomeDtoIn;
 import fr.esgi.avis.dto.out.PlatefomeDtoOut;
+import fr.esgi.avis.exception.ResourceNotFoundException;
 import fr.esgi.avis.mapper.PlateformeMapper;
 import fr.esgi.avis.port.in.PlateformeUseCase;
 import fr.esgi.avis.port.out.PlateformePort;
@@ -31,7 +32,7 @@ public class PlateformeService implements PlateformeUseCase {
     @Override
     public PlatefomeDtoOut mettreAJour(Long id, PlatefomeDtoIn dto) {
         Plateforme existing = plateformePort.findById(id)
-                .orElseThrow(() -> new RuntimeException("Plateforme non trouvée : " + id));
+                .orElseThrow(() -> new ResourceNotFoundException("Plateforme", id));
         existing.setNom(dto.nom());
         existing.setDateDeSortie(dto.dateDeSortie());
         return plateformeMapper.toDto(plateformePort.save(existing));
@@ -42,7 +43,7 @@ public class PlateformeService implements PlateformeUseCase {
     public PlatefomeDtoOut recupererUnePlateformeParId(Long id) {
         return plateformePort.findById(id)
                 .map(plateformeMapper::toDto)
-                .orElseThrow(() -> new RuntimeException("Plateforme non trouvée : " + id));
+                .orElseThrow(() -> new ResourceNotFoundException("Plateforme", id));
     }
 
     @Override

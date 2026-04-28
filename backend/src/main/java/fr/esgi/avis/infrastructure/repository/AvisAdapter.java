@@ -3,6 +3,8 @@ package fr.esgi.avis.infrastructure.repository;
 import fr.esgi.avis.business.*;
 import fr.esgi.avis.infrastructure.entity.AvisEntity;
 import fr.esgi.avis.port.out.AvisPort;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
 
 import java.util.Collections;
@@ -43,8 +45,18 @@ public class AvisAdapter implements AvisPort {
     }
 
     @Override
+    public Page<Avis> findAll(Pageable pageable) {
+        return jpaRepository.findAll(pageable).map(this::toDomain);
+    }
+
+    @Override
     public List<Avis> findAllByJeuId(Long jeuId) {
         return jpaRepository.findAllByJeuId(jeuId).stream().map(this::toDomain).toList();
+    }
+
+    @Override
+    public Page<Avis> findAllByJeuId(Long jeuId, Pageable pageable) {
+        return jpaRepository.findAllByJeuId(jeuId, pageable).map(this::toDomain);
     }
 
     @Override
@@ -53,8 +65,18 @@ public class AvisAdapter implements AvisPort {
     }
 
     @Override
+    public Page<Avis> findAllByJoueurId(Long joueurId, Pageable pageable) {
+        return jpaRepository.findAllByJoueurId(joueurId, pageable).map(this::toDomain);
+    }
+
+    @Override
     public void deleteById(Long id) {
         jpaRepository.deleteById(id);
+    }
+
+    @Override
+    public Optional<Double> findNoteMoyenneByJeuId(Long jeuId) {
+        return jpaRepository.findNoteMoyenneByJeuId(jeuId);
     }
 
     private AvisEntity toEntity(Avis avis) {
@@ -77,7 +99,7 @@ public class AvisAdapter implements AvisPort {
 
     private Avis toDomain(AvisEntity entity) {
         Jeu jeu = entity.getJeu() != null
-                ? new Jeu(entity.getJeu().getId(), entity.getJeu().getNom(), null, null, null, 0, null, null, null, Collections.emptyList())
+                ? new Jeu(entity.getJeu().getId(), entity.getJeu().getNom(), null, null, null, 0, null, null, null, Collections.emptyList(), null)
                 : null;
         Joueur joueur = null;
         if (entity.getJoueur() != null) {

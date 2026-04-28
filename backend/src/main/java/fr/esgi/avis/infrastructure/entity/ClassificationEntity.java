@@ -25,6 +25,9 @@ public class ClassificationEntity {
     @Column(nullable = false)
     private String couleurRGB;
 
+    @Version
+    private Long version;
+
     @OneToMany(mappedBy = "classification", fetch = FetchType.LAZY)
     private List<JeuEntity> jeux = new ArrayList<>();
 }

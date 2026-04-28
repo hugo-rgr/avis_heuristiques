@@ -22,6 +22,9 @@ public class EditeurEntity {
     @Column(nullable = false, unique = true)
     private String nom;
 
+    @Version
+    private Long version;
+
     @OneToMany(mappedBy = "editeur", fetch = FetchType.LAZY)
     private List<JeuEntity> jeux = new ArrayList<>();
 }

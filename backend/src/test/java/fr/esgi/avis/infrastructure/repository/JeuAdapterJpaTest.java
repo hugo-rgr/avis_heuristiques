@@ -54,7 +54,8 @@ class JeuAdapterJpaTest {
                 LocalDate.of(2024, 1, 1),
                 new Editeur(editeur.getId(), null, List.of()),
                 new Classification(classification.getId(), null, List.of(), null),
-                List.of(new Plateforme(p1.getId(), null, List.of(), null), new Plateforme(p2.getId(), null, List.of(), null))
+                List.of(new Plateforme(p1.getId(), null, List.of(), null), new Plateforme(p2.getId(), null, List.of(), null)),
+                null
         );
 
         Jeu saved = jeuAdapter.save(jeu);
@@ -140,6 +141,7 @@ class JeuAdapterJpaTest {
                 null,
                 editeurId != null ? new Editeur(editeurId, null, List.of()) : null,
                 null,
-                List.of());
+                List.of(),
+                null);
     }
 }

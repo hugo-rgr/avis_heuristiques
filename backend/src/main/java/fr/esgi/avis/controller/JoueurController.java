@@ -5,8 +5,10 @@ import fr.esgi.avis.dto.in.JoueurDtoIn;
 import fr.esgi.avis.dto.out.AvisDtoOut;
 import fr.esgi.avis.dto.out.JoueurDtoOut;
 import fr.esgi.avis.port.in.JoueurUseCase;
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -22,7 +24,7 @@ public class JoueurController {
     }
 
     @PostMapping("/inscription")
-    public ResponseEntity<JoueurDtoOut> sInscrire(@RequestBody JoueurDtoIn dto) {
+    public ResponseEntity<JoueurDtoOut> sInscrire(@Valid @RequestBody JoueurDtoIn dto) {
         return ResponseEntity.status(HttpStatus.CREATED).body(joueurUseCase.sInscrire(dto));
     }
 
@@ -37,7 +39,8 @@ public class JoueurController {
     }
 
     @PostMapping("/{id}/avis")
-    public ResponseEntity<AvisDtoOut> redigerUnAvis(@PathVariable Long id, @RequestBody AvisDtoIn dto) {
+    @PreAuthorize("hasRole('JOUEUR')")
+    public ResponseEntity<AvisDtoOut> redigerUnAvis(@PathVariable Long id, @Valid @RequestBody AvisDtoIn dto) {
         return ResponseEntity.status(HttpStatus.CREATED).body(joueurUseCase.redigerUnAvis(id, dto));
     }
 }

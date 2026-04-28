@@ -50,7 +50,6 @@ class ModerateurControllerTest {
 
         moderateurDtoOut = new ModerateurDtoOut(1L, "mod123", "mod@example.com", "0612345678");
         jeuDtoIn = new JeuDtoIn(
-                null,
                 "New Game",
                 "Description",
                 1L,
@@ -62,7 +61,7 @@ class ModerateurControllerTest {
                 List.of()
         );
         jeuDtoOut = new JeuDtoOut(1L, "New Game", "Description", "image.jpg",
-                59.99f, LocalDate.now(), "RPG", "Ubisoft", "PEGI 12", List.of());
+                59.99f, LocalDate.now(), "RPG", "Ubisoft", "PEGI 12", List.of(), null);
     }
 
     @Test

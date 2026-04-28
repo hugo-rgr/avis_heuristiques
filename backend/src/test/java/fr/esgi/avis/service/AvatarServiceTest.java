@@ -21,6 +21,7 @@ import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
@@ -89,7 +90,7 @@ class AvatarServiceTest {
 
         when(avatarPort.findById(1L)).thenReturn(Optional.of(avatar));
         when(joueurPort.findById(1L)).thenReturn(Optional.of(joueur));
-        when(avatarMapper.toDomain(any(AvatarDtoIn.class), any(Joueur.class))).thenReturn(updatedAvatar);
+        when(avatarMapper.toDomain(anyLong(), any(AvatarDtoIn.class), any(Joueur.class))).thenReturn(updatedAvatar);
         when(avatarPort.save(any(Avatar.class))).thenReturn(updatedAvatar);
         when(avatarMapper.toDto(any(Avatar.class))).thenReturn(new AvatarDtoOut(1L, "Wizard Avatar", 1L, "gamer123"));
 

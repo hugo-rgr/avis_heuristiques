@@ -6,6 +6,8 @@ import fr.esgi.avis.dto.in.AvisDtoIn;
 import fr.esgi.avis.dto.in.JoueurDtoIn;
 import fr.esgi.avis.dto.out.AvisDtoOut;
 import fr.esgi.avis.dto.out.JoueurDtoOut;
+import fr.esgi.avis.exception.DuplicateEmailException;
+import fr.esgi.avis.exception.ResourceNotFoundException;
 import fr.esgi.avis.mapper.AvisMapper;
 import fr.esgi.avis.mapper.JoueurMapper;
 import fr.esgi.avis.port.in.JoueurUseCase;
@@ -43,7 +45,7 @@ public class JoueurService implements JoueurUseCase {
     @Override
     public JoueurDtoOut sInscrire(JoueurDtoIn dto) {
         if (joueurPort.existsByEmail(dto.email())) {
-            throw new RuntimeException("Email déjà utilisé : " + dto.email());
+            throw new DuplicateEmailException(dto.email());
         }
         Joueur joueur = joueurMapper.toDomain(dto);
         joueur.setMotDePasse(passwordEncoder.encode(dto.motDePasse()));
@@ -55,7 +57,7 @@ public class JoueurService implements JoueurUseCase {
     public JoueurDtoOut trouverParId(Long id) {
         return joueurPort.findById(id)
                 .map(joueurMapper::toDto)
-                .orElseThrow(() -> new RuntimeException("Joueur non trouvé : " + id));
+                .orElseThrow(() -> new ResourceNotFoundException("Joueur", id));
     }
 
     @Override
@@ -67,9 +69,9 @@ public class JoueurService implements JoueurUseCase {
     @Override
     public AvisDtoOut redigerUnAvis(Long joueurId, AvisDtoIn dto) {
         Joueur joueur = joueurPort.findById(joueurId)
-                .orElseThrow(() -> new RuntimeException("Joueur non trouvé : " + joueurId));
+                .orElseThrow(() -> new ResourceNotFoundException("Joueur", joueurId));
         Jeu jeu = jeuPort.findById(dto.jeuId())
-                .orElseThrow(() -> new RuntimeException("Jeu non trouvé : " + dto.jeuId()));
+                .orElseThrow(() -> new ResourceNotFoundException("Jeu", dto.jeuId()));
         return avisMapper.toDto(avisPort.save(avisMapper.toDomain(dto, jeu, joueur, null)));
     }
 }

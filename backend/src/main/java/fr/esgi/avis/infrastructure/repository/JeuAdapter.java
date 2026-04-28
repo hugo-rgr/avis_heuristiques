@@ -3,6 +3,8 @@ package fr.esgi.avis.infrastructure.repository;
 import fr.esgi.avis.business.*;
 import fr.esgi.avis.infrastructure.entity.*;
 import fr.esgi.avis.port.out.JeuPort;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
 
 import java.util.Collections;
@@ -46,13 +48,28 @@ public class JeuAdapter implements JeuPort {
     }
 
     @Override
+    public Page<Jeu> findAll(Pageable pageable) {
+        return jpaRepository.findAll(pageable).map(this::toDomain);
+    }
+
+    @Override
     public List<Jeu> findAllByGenreId(Long genreId) {
         return jpaRepository.findAllByGenreId(genreId).stream().map(this::toDomain).toList();
     }
 
     @Override
+    public Page<Jeu> findAllByGenreId(Long genreId, Pageable pageable) {
+        return jpaRepository.findAllByGenreId(genreId, pageable).map(this::toDomain);
+    }
+
+    @Override
     public List<Jeu> findAllByEditeurId(Long editeurId) {
         return jpaRepository.findAllByEditeurId(editeurId).stream().map(this::toDomain).toList();
+    }
+
+    @Override
+    public Page<Jeu> findAllByEditeurId(Long editeurId, Pageable pageable) {
+        return jpaRepository.findAllByEditeurId(editeurId, pageable).map(this::toDomain);
     }
 
     @Override
@@ -98,6 +115,6 @@ public class JeuAdapter implements JeuPort {
                 .map(p -> new Plateforme(p.getId(), p.getNom(), Collections.emptyList(), p.getDateDeSortie()))
                 .toList();
         return new Jeu(entity.getId(), entity.getNom(), entity.getDescription(), genre,
-                entity.getImage(), entity.getPrix(), entity.getDateDeSortie(), editeur, classification, plateformes);
+                entity.getImage(), entity.getPrix(), entity.getDateDeSortie(), editeur, classification, plateformes, null);
     }
 }

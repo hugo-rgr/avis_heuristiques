@@ -17,7 +17,7 @@ public interface AvisMapper {
     @Mapping(source = "moderateur.pseudo", target = "moderateurPseudo")
     AvisDtoOut toDto(Avis avis);
 
-    @Mapping(target = "id", source = "dto.id")
+    @Mapping(target = "id", ignore = true)
     @Mapping(target = "description", source = "dto.description")
     @Mapping(target = "note", source = "dto.note")
     @Mapping(target = "dateDEnvoi", source = "dto.dateDEnvoi")

@@ -2,6 +2,8 @@ package fr.esgi.avis.service;
 
 import fr.esgi.avis.dto.in.LoginDtoIn;
 import fr.esgi.avis.dto.out.TokenDtoOut;
+import fr.esgi.avis.exception.BadCredentialsException;
+import fr.esgi.avis.exception.UserNotFoundException;
 import fr.esgi.avis.port.in.AuthUseCase;
 import fr.esgi.avis.port.out.JoueurPort;
 import fr.esgi.avis.port.out.ModerateurPort;
@@ -32,18 +34,18 @@ public class AuthService implements AuthUseCase {
         return joueurPort.findByEmail(dto.email())
                 .map(joueur -> {
                     if (!passwordEncoder.matches(dto.motDePasse(), joueur.getMotDePasse())) {
-                        throw new RuntimeException("Mot de passe incorrect");
+                        throw new BadCredentialsException();
                     }
-                    return new TokenDtoOut(tokenPort.generateToken(joueur.getId(), joueur.getEmail(), "JOUEUR"), "JOUEUR");
+                    return new TokenDtoOut(tokenPort.generateToken(joueur.getEmail(), "JOUEUR"), "JOUEUR");
                 })
                 .orElseGet(() -> moderateurPort.findByEmail(dto.email())
                         .map(mod -> {
                             if (!passwordEncoder.matches(dto.motDePasse(), mod.getMotDePasse())) {
-                                throw new RuntimeException("Mot de passe incorrect");
+                                throw new BadCredentialsException();
                             }
-                            return new TokenDtoOut(tokenPort.generateToken(mod.getId(), mod.getEmail(), "MODERATEUR"), "MODERATEUR");
+                            return new TokenDtoOut(tokenPort.generateToken(mod.getEmail(), "MODERATEUR"), "MODERATEUR");
                         })
-                        .orElseThrow(() -> new RuntimeException("Utilisateur non trouvé : " + dto.email()))
+                        .orElseThrow(() -> new UserNotFoundException(dto.email()))
                 );
     }
 }

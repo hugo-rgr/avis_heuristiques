@@ -1,12 +1,14 @@
 package fr.esgi.avis.service;
 
-import fr.esgi.avis.business.*;
+import fr.esgi.avis.business.Avis;
+import fr.esgi.avis.business.Moderateur;
 import fr.esgi.avis.dto.in.JeuDtoIn;
 import fr.esgi.avis.dto.out.JeuDtoOut;
 import fr.esgi.avis.dto.out.ModerateurDtoOut;
-import fr.esgi.avis.mapper.JeuMapper;
 import fr.esgi.avis.mapper.ModerateurMapper;
-import fr.esgi.avis.port.out.*;
+import fr.esgi.avis.port.in.JeuUseCase;
+import fr.esgi.avis.port.out.AvisPort;
+import fr.esgi.avis.port.out.ModerateurPort;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -31,28 +33,13 @@ class ModerateurServiceTest {
     private ModerateurPort moderateurPort;
 
     @Mock
-    private JeuPort jeuPort;
-
-    @Mock
     private AvisPort avisPort;
 
     @Mock
-    private GenrePort genrePort;
-
-    @Mock
-    private EditeurPort editeurPort;
-
-    @Mock
-    private ClassificationPort classificationPort;
-
-    @Mock
-    private PlateformePort plateformePort;
+    private JeuUseCase jeuUseCase;
 
     @Mock
     private ModerateurMapper moderateurMapper;
-
-    @Mock
-    private JeuMapper jeuMapper;
 
     @InjectMocks
     private ModerateurService moderateurService;
@@ -95,14 +82,9 @@ class ModerateurServiceTest {
     }
 
     @Test
-    @DisplayName("Should add a new game")
+    @DisplayName("Should add a new game by delegating to JeuUseCase")
     void testAjouterJeu() {
-        Genre genre = new Genre(1L, "RPG", List.of());
-        Editeur editeur = new Editeur(1L, "Ubisoft", List.of());
-        Classification classification = new Classification(1L, "PEGI 12", List.of(), "FFFFFF");
-
         JeuDtoIn jeuDto = new JeuDtoIn(
-                1L,
                 "New Game",
                 "Description",
                 1L,
@@ -114,23 +96,18 @@ class ModerateurServiceTest {
                 List.of()
         );
 
-        Jeu jeu = new Jeu(1L, "New Game", "Description", genre, "image.jpg", 59.99f,
-                LocalDate.now(), editeur, classification, List.of());
+        JeuDtoOut jeuDtoOut = new JeuDtoOut(1L, "New Game", "Description", "image.jpg",
+                59.99f, LocalDate.now(), "RPG", "Ubisoft", "PEGI 12", List.of(), null);
 
         when(moderateurPort.findById(1L)).thenReturn(Optional.of(moderateur));
-        when(genrePort.findById(1L)).thenReturn(Optional.of(genre));
-        when(editeurPort.findById(1L)).thenReturn(Optional.of(editeur));
-        when(classificationPort.findById(1L)).thenReturn(Optional.of(classification));
-        when(jeuMapper.toDomain(any(JeuDtoIn.class), any(), any(), any(), anyList())).thenReturn(jeu);
-        when(jeuPort.save(any(Jeu.class))).thenReturn(jeu);
-        when(jeuMapper.toDto(any(Jeu.class))).thenReturn(new JeuDtoOut(1L, "New Game", "Description", "image.jpg", 59.99f, LocalDate.now(), "RPG", "Ubisoft", "PEGI 12", List.of()));
+        when(jeuUseCase.creerUnJeu(any(JeuDtoIn.class))).thenReturn(jeuDtoOut);
 
         JeuDtoOut result = moderateurService.ajouterJeu(1L, jeuDto);
 
         assertThat(result).isNotNull();
         assertThat(result.nom()).isEqualTo("New Game");
         verify(moderateurPort, times(1)).findById(1L);
-        verify(jeuPort, times(1)).save(any(Jeu.class));
+        verify(jeuUseCase, times(1)).creerUnJeu(any(JeuDtoIn.class));
     }
 
     @Test
@@ -139,7 +116,6 @@ class ModerateurServiceTest {
         when(moderateurPort.findById(999L)).thenReturn(Optional.empty());
 
         JeuDtoIn jeuDto = new JeuDtoIn(
-                null,
                 "Game",
                 "Description",
                 1L,

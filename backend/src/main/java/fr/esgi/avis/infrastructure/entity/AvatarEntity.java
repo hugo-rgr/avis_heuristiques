@@ -19,6 +19,9 @@ public class AvatarEntity {
     @Column(nullable = false)
     private String nom;
 
+    @Version
+    private Long version;
+
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "joueur_id", nullable = false, unique = true)
     private JoueurEntity joueur;

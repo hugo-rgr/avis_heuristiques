@@ -3,8 +3,10 @@ package fr.esgi.avis.controller;
 import fr.esgi.avis.dto.in.GenreDtoIn;
 import fr.esgi.avis.dto.out.GenreDtoOut;
 import fr.esgi.avis.port.in.GenreUseCase;
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -20,12 +22,14 @@ public class GenreController {
     }
 
     @PostMapping
-    public ResponseEntity<GenreDtoOut> creerUnGenre(@RequestBody GenreDtoIn dto) {
+    @PreAuthorize("hasRole('MODERATEUR')")
+    public ResponseEntity<GenreDtoOut> creerUnGenre(@Valid @RequestBody GenreDtoIn dto) {
         return ResponseEntity.status(HttpStatus.CREATED).body(genreUseCase.creerUnGenre(dto));
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<GenreDtoOut> mettreAJourUnGenre(@PathVariable Long id, @RequestBody GenreDtoIn dto) {
+    @PreAuthorize("hasRole('MODERATEUR')")
+    public ResponseEntity<GenreDtoOut> mettreAJourUnGenre(@PathVariable Long id, @Valid @RequestBody GenreDtoIn dto) {
         return ResponseEntity.ok(genreUseCase.mettreAJourUnGenre(id, dto));
     }
 
@@ -40,6 +44,7 @@ public class GenreController {
     }
 
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasRole('MODERATEUR')")
     public ResponseEntity<Void> supprimerUnGenre(@PathVariable Long id) {
         genreUseCase.supprimerUnGenre(id);
         return ResponseEntity.noContent().build();

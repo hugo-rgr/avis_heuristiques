@@ -3,6 +3,10 @@ package fr.esgi.avis.controller;
 import fr.esgi.avis.dto.in.AvatarDtoIn;
 import fr.esgi.avis.dto.out.AvatarDtoOut;
 import fr.esgi.avis.port.in.AvatarUseCase;
+import jakarta.validation.Valid;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -20,12 +24,12 @@ public class AvatarController {
     }
 
     @PostMapping
-    public ResponseEntity<AvatarDtoOut> creerUnAvatar(@RequestBody AvatarDtoIn dto) {
+    public ResponseEntity<AvatarDtoOut> creerUnAvatar(@Valid @RequestBody AvatarDtoIn dto) {
         return ResponseEntity.status(HttpStatus.CREATED).body(avatarUseCase.creerUnAvatar(dto));
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<AvatarDtoOut> mettreAJour(@PathVariable Long id, @RequestBody AvatarDtoIn dto) {
+    public ResponseEntity<AvatarDtoOut> mettreAJour(@PathVariable Long id, @Valid @RequestBody AvatarDtoIn dto) {
         return ResponseEntity.ok(avatarUseCase.mettreAJour(id, dto));
     }
 
@@ -37,6 +41,12 @@ public class AvatarController {
     @GetMapping
     public ResponseEntity<List<AvatarDtoOut>> recupererTousLesAvatars() {
         return ResponseEntity.ok(avatarUseCase.recupererTousLesAvatars());
+    }
+
+    @GetMapping("/page")
+    public ResponseEntity<Page<AvatarDtoOut>> recupererTousLesAvatarsPagine(
+            @PageableDefault(size = 20) Pageable pageable) {
+        return ResponseEntity.ok(avatarUseCase.recupererTousLesAvatars(pageable));
     }
 
     @GetMapping("/joueur/{joueurId}")

@@ -27,6 +27,9 @@ public class AvisEntity {
     @Column
     private LocalDate dateDEnvoi;
 
+    @Version
+    private Long version;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "jeu_id", nullable = false)
     private JeuEntity jeu;

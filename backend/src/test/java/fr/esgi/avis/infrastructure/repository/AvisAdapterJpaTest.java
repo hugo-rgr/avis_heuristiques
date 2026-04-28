@@ -12,6 +12,7 @@ import org.springframework.context.annotation.Import;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -41,7 +42,7 @@ class AvisAdapterJpaTest {
 
         Avis avis = new Avis(null,
                 "Super jeu",
-                new Jeu(jeu.getId(), null, null, null, null, 0, null, null, null, List.of()),
+                new Jeu(jeu.getId(), null, null, null, null, 0, null, null, null, List.of(), null),
                 domainJoueurStub(joueur.getId()),
                 4.5f,
                 domainModerateurStub(mod.getId()),
@@ -68,9 +69,9 @@ class AvisAdapterJpaTest {
         JoueurEntity j1 = joueurJpaRepository.save(TestEntities.joueurEntity("u1", "u1@mail.com"));
         JoueurEntity j2 = joueurJpaRepository.save(TestEntities.joueurEntity("u2", "u2@mail.com"));
 
-        avisAdapter.save(new Avis(null, "a1", new Jeu(jeu1.getId(), null, null, null, null, 0, null, null, null, List.of()), domainJoueurStub(j1.getId()), 3f, null, LocalDate.of(2025, 1, 1)));
-        avisAdapter.save(new Avis(null, "a2", new Jeu(jeu2.getId(), null, null, null, null, 0, null, null, null, List.of()), domainJoueurStub(j1.getId()), 4f, null, LocalDate.of(2025, 1, 2)));
-        avisAdapter.save(new Avis(null, "a3", new Jeu(jeu1.getId(), null, null, null, null, 0, null, null, null, List.of()), domainJoueurStub(j2.getId()), 5f, null, LocalDate.of(2025, 1, 3)));
+        avisAdapter.save(new Avis(null, "a1", new Jeu(jeu1.getId(), null, null, null, null, 0, null, null, null, List.of(), null), domainJoueurStub(j1.getId()), 3f, null, LocalDate.of(2025, 1, 1)));
+        avisAdapter.save(new Avis(null, "a2", new Jeu(jeu2.getId(), null, null, null, null, 0, null, null, null, List.of(), null), domainJoueurStub(j1.getId()), 4f, null, LocalDate.of(2025, 1, 2)));
+        avisAdapter.save(new Avis(null, "a3", new Jeu(jeu1.getId(), null, null, null, null, 0, null, null, null, List.of(), null), domainJoueurStub(j2.getId()), 5f, null, LocalDate.of(2025, 1, 3)));
 
         assertThat(avisAdapter.findAllByJeuId(jeu1.getId())).extracting(Avis::getDescription)
                 .containsExactlyInAnyOrder("a1", "a3");
@@ -80,12 +81,27 @@ class AvisAdapterJpaTest {
     }
 
     @Test
+    @DisplayName("findNoteMoyenneByJeuId retourne la moyenne des notes")
+    void findNoteMoyenneByJeuId_returnsAverage() {
+        JeuEntity jeu = jeuJpaRepository.save(entityJeu("AvgGame"));
+        JoueurEntity joueur = joueurJpaRepository.save(TestEntities.joueurEntity("avg_user", "avg@mail.com"));
+
+        avisAdapter.save(new Avis(null, "note 6", new Jeu(jeu.getId(), null, null, null, null, 0, null, null, null, List.of(), null), domainJoueurStub(joueur.getId()), 6f, null, LocalDate.now()));
+        avisAdapter.save(new Avis(null, "note 8", new Jeu(jeu.getId(), null, null, null, null, 0, null, null, null, List.of(), null), domainJoueurStub(joueur.getId()), 8f, null, LocalDate.now()));
+
+        Optional<Double> moyenne = avisAdapter.findNoteMoyenneByJeuId(jeu.getId());
+
+        assertThat(moyenne).isPresent();
+        assertThat(moyenne.get()).isEqualTo(7.0);
+    }
+
+    @Test
     @DisplayName("deleteById doit supprimer")
     void deleteById() {
         JeuEntity jeu = jeuJpaRepository.save(entityJeu("DelGame"));
         JoueurEntity joueur = joueurJpaRepository.save(TestEntities.joueurEntity("del", "del@mail.com"));
 
-        Avis saved = avisAdapter.save(new Avis(null, "todel", new Jeu(jeu.getId(), null, null, null, null, 0, null, null, null, List.of()), domainJoueurStub(joueur.getId()), 1f, null, LocalDate.of(2025, 1, 1)));
+        Avis saved = avisAdapter.save(new Avis(null, "todel", new Jeu(jeu.getId(), null, null, null, null, 0, null, null, null, List.of(), null), domainJoueurStub(joueur.getId()), 1f, null, LocalDate.of(2025, 1, 1)));
 
         avisAdapter.deleteById(saved.getId());
         assertThat(avisAdapter.findById(saved.getId())).isEmpty();

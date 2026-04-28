@@ -18,7 +18,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
@@ -41,6 +41,9 @@ class JeuServiceTest {
     private PlateformePort plateformePort;
 
     @Mock
+    private AvisPort avisPort;
+
+    @Mock
     private JeuMapper jeuMapper;
 
     @InjectMocks
@@ -59,7 +62,6 @@ class JeuServiceTest {
         classification = new Classification(1L, "PEGI 12", List.of(), "FFFFFF");
 
         jeuDtoIn = new JeuDtoIn(
-                null,
                 "Baldur's Gate 3",
                 "A fantasy RPG",
                 1L,
@@ -72,7 +74,7 @@ class JeuServiceTest {
         );
 
         jeu = new Jeu(1L, "Baldur's Gate 3", "A fantasy RPG", genre, "image.jpg", 59.99f,
-                LocalDate.of(2023, 8, 3), editeur, classification, List.of());
+                LocalDate.of(2023, 8, 3), editeur, classification, List.of(), null);
     }
 
     @Test
@@ -83,7 +85,8 @@ class JeuServiceTest {
         when(classificationPort.findById(1L)).thenReturn(Optional.of(classification));
         when(jeuMapper.toDomain(any(JeuDtoIn.class), any(), any(), any(), anyList())).thenReturn(jeu);
         when(jeuPort.save(any(Jeu.class))).thenReturn(jeu);
-        when(jeuMapper.toDto(any(Jeu.class))).thenReturn(new JeuDtoOut(1L, "Baldur's Gate 3", "A fantasy RPG", "image.jpg", 59.99f, LocalDate.of(2023, 8, 3), "RPG", "Ubisoft", "PEGI 12", List.of()));
+        when(avisPort.findNoteMoyenneByJeuId(anyLong())).thenReturn(Optional.empty());
+        when(jeuMapper.toDto(any(Jeu.class))).thenReturn(new JeuDtoOut(1L, "Baldur's Gate 3", "A fantasy RPG", "image.jpg", 59.99f, LocalDate.of(2023, 8, 3), "RPG", "Ubisoft", "PEGI 12", List.of(), null));
 
         JeuDtoOut result = jeuService.creerUnJeu(jeuDtoIn);
 
@@ -98,7 +101,6 @@ class JeuServiceTest {
         when(genrePort.findById(999L)).thenReturn(Optional.empty());
 
         JeuDtoIn dtoWithBadGenre = new JeuDtoIn(
-                null,
                 "Game",
                 "Description",
                 999L,
@@ -122,9 +124,10 @@ class JeuServiceTest {
         when(genrePort.findById(1L)).thenReturn(Optional.of(genre));
         when(editeurPort.findById(1L)).thenReturn(Optional.of(editeur));
         when(classificationPort.findById(1L)).thenReturn(Optional.of(classification));
-        when(jeuMapper.toDomain(any(JeuDtoIn.class), any(), any(), any(), anyList())).thenReturn(jeu);
+        when(jeuMapper.toDomain(anyLong(), any(JeuDtoIn.class), any(), any(), any(), anyList())).thenReturn(jeu);
         when(jeuPort.save(any(Jeu.class))).thenReturn(jeu);
-        when(jeuMapper.toDto(any(Jeu.class))).thenReturn(new JeuDtoOut(1L, "Baldur's Gate 3", "A fantasy RPG", "image.jpg", 59.99f, LocalDate.of(2023, 8, 3), "RPG", "Ubisoft", "PEGI 12", List.of()));
+        when(avisPort.findNoteMoyenneByJeuId(anyLong())).thenReturn(Optional.empty());
+        when(jeuMapper.toDto(any(Jeu.class))).thenReturn(new JeuDtoOut(1L, "Baldur's Gate 3", "A fantasy RPG", "image.jpg", 59.99f, LocalDate.of(2023, 8, 3), "RPG", "Ubisoft", "PEGI 12", List.of(), null));
 
         JeuDtoOut result = jeuService.mettreAJourUnJeu(1L, jeuDtoIn);
 
@@ -147,7 +150,8 @@ class JeuServiceTest {
     @DisplayName("Should retrieve game by id")
     void testRecupererUnJeuParId() {
         when(jeuPort.findById(1L)).thenReturn(Optional.of(jeu));
-        when(jeuMapper.toDto(any(Jeu.class))).thenReturn(new JeuDtoOut(1L, "Baldur's Gate 3", "A fantasy RPG", "image.jpg", 59.99f, LocalDate.of(2023, 8, 3), "RPG", "Ubisoft", "PEGI 12", List.of()));
+        when(avisPort.findNoteMoyenneByJeuId(anyLong())).thenReturn(Optional.empty());
+        when(jeuMapper.toDto(any(Jeu.class))).thenReturn(new JeuDtoOut(1L, "Baldur's Gate 3", "A fantasy RPG", "image.jpg", 59.99f, LocalDate.of(2023, 8, 3), "RPG", "Ubisoft", "PEGI 12", List.of(), null));
 
         JeuDtoOut result = jeuService.recupererUnJeuParId(1L);
 
@@ -170,11 +174,12 @@ class JeuServiceTest {
     @DisplayName("Should retrieve all games")
     void testRecupererTousLesJeux() {
         Jeu jeu2 = new Jeu(2L, "Elden Ring", "Action RPG", genre, "image2.jpg", 59.99f,
-                LocalDate.of(2022, 2, 25), editeur, classification, List.of());
+                LocalDate.of(2022, 2, 25), editeur, classification, List.of(), null);
 
         when(jeuPort.findAll()).thenReturn(List.of(jeu, jeu2));
-        when(jeuMapper.toDto(jeu)).thenReturn(new JeuDtoOut(1L, "Baldur's Gate 3", "A fantasy RPG", "image.jpg", 59.99f, LocalDate.of(2023, 8, 3), "RPG", "Ubisoft", "PEGI 12", List.of()));
-        when(jeuMapper.toDto(jeu2)).thenReturn(new JeuDtoOut(2L, "Elden Ring", "Action RPG", "image2.jpg", 59.99f, LocalDate.of(2022, 2, 25), "RPG", "Ubisoft", "PEGI 12", List.of()));
+        when(avisPort.findNoteMoyenneByJeuId(anyLong())).thenReturn(Optional.empty());
+        when(jeuMapper.toDto(jeu)).thenReturn(new JeuDtoOut(1L, "Baldur's Gate 3", "A fantasy RPG", "image.jpg", 59.99f, LocalDate.of(2023, 8, 3), "RPG", "Ubisoft", "PEGI 12", List.of(), null));
+        when(jeuMapper.toDto(jeu2)).thenReturn(new JeuDtoOut(2L, "Elden Ring", "Action RPG", "image2.jpg", 59.99f, LocalDate.of(2022, 2, 25), "RPG", "Ubisoft", "PEGI 12", List.of(), null));
 
         List<JeuDtoOut> result = jeuService.recupererTousLesJeux();
 
@@ -187,7 +192,8 @@ class JeuServiceTest {
     @DisplayName("Should retrieve games by genre id")
     void testRecupererDesJeuxDUnGenre() {
         when(jeuPort.findAllByGenreId(1L)).thenReturn(List.of(jeu));
-        when(jeuMapper.toDto(jeu)).thenReturn(new JeuDtoOut(1L, "Baldur's Gate 3", "A fantasy RPG", "image.jpg", 59.99f, LocalDate.of(2023, 8, 3), "RPG", "Ubisoft", "PEGI 12", List.of()));
+        when(avisPort.findNoteMoyenneByJeuId(anyLong())).thenReturn(Optional.empty());
+        when(jeuMapper.toDto(jeu)).thenReturn(new JeuDtoOut(1L, "Baldur's Gate 3", "A fantasy RPG", "image.jpg", 59.99f, LocalDate.of(2023, 8, 3), "RPG", "Ubisoft", "PEGI 12", List.of(), null));
 
         List<JeuDtoOut> result = jeuService.recupererDesJeuxDUnGenre(1L);
 
@@ -200,7 +206,8 @@ class JeuServiceTest {
     @DisplayName("Should retrieve games by publisher id")
     void testRecupererDesJeuxDUnEditeur() {
         when(jeuPort.findAllByEditeurId(1L)).thenReturn(List.of(jeu));
-        when(jeuMapper.toDto(jeu)).thenReturn(new JeuDtoOut(1L, "Baldur's Gate 3", "A fantasy RPG", "image.jpg", 59.99f, LocalDate.of(2023, 8, 3), "RPG", "Ubisoft", "PEGI 12", List.of()));
+        when(avisPort.findNoteMoyenneByJeuId(anyLong())).thenReturn(Optional.empty());
+        when(jeuMapper.toDto(jeu)).thenReturn(new JeuDtoOut(1L, "Baldur's Gate 3", "A fantasy RPG", "image.jpg", 59.99f, LocalDate.of(2023, 8, 3), "RPG", "Ubisoft", "PEGI 12", List.of(), null));
 
         List<JeuDtoOut> result = jeuService.recupererDesJeuxDUnEditeur(1L);
 

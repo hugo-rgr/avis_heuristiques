@@ -5,6 +5,8 @@ import fr.esgi.avis.business.Joueur;
 import fr.esgi.avis.infrastructure.entity.AvatarEntity;
 import fr.esgi.avis.infrastructure.entity.JoueurEntity;
 import fr.esgi.avis.port.out.AvatarPort;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
 
 import java.util.Collections;
@@ -35,6 +37,11 @@ public class AvatarAdapter implements AvatarPort {
     @Override
     public List<Avatar> findAll() {
         return jpaRepository.findAll().stream().map(this::toDomain).toList();
+    }
+
+    @Override
+    public Page<Avatar> findAll(Pageable pageable) {
+        return jpaRepository.findAll(pageable).map(this::toDomain);
     }
 
     @Override

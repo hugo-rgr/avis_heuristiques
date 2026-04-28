@@ -47,6 +47,9 @@ public class JeuEntity {
     @JoinColumn(name = "classification_id")
     private ClassificationEntity classification;
 
+    @Version
+    private Long version;
+
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
             name = "jeu_plateforme",

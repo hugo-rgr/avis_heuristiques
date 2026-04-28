@@ -3,8 +3,13 @@ package fr.esgi.avis.controller;
 import fr.esgi.avis.dto.in.JeuDtoIn;
 import fr.esgi.avis.dto.out.JeuDtoOut;
 import fr.esgi.avis.port.in.JeuUseCase;
+import jakarta.validation.Valid;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -20,12 +25,14 @@ public class JeuController {
     }
 
     @PostMapping
-    public ResponseEntity<JeuDtoOut> creerUnJeu(@RequestBody JeuDtoIn dto) {
+    @PreAuthorize("hasRole('MODERATEUR')")
+    public ResponseEntity<JeuDtoOut> creerUnJeu(@Valid @RequestBody JeuDtoIn dto) {
         return ResponseEntity.status(HttpStatus.CREATED).body(jeuUseCase.creerUnJeu(dto));
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<JeuDtoOut> mettreAJourUnJeu(@PathVariable Long id, @RequestBody JeuDtoIn dto) {
+    @PreAuthorize("hasRole('MODERATEUR')")
+    public ResponseEntity<JeuDtoOut> mettreAJourUnJeu(@PathVariable Long id, @Valid @RequestBody JeuDtoIn dto) {
         return ResponseEntity.ok(jeuUseCase.mettreAJourUnJeu(id, dto));
     }
 
@@ -39,6 +46,12 @@ public class JeuController {
         return ResponseEntity.ok(jeuUseCase.recupererTousLesJeux());
     }
 
+    @GetMapping("/page")
+    public ResponseEntity<Page<JeuDtoOut>> recupererTousLesJeuxPagine(
+            @PageableDefault(size = 20) Pageable pageable) {
+        return ResponseEntity.ok(jeuUseCase.recupererTousLesJeux(pageable));
+    }
+
     @GetMapping("/genre/{genreId}")
     public ResponseEntity<List<JeuDtoOut>> recupererDesJeuxDUnGenre(@PathVariable Long genreId) {
         return ResponseEntity.ok(jeuUseCase.recupererDesJeuxDUnGenre(genreId));
@@ -50,6 +63,7 @@ public class JeuController {
     }
 
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasRole('MODERATEUR')")
     public ResponseEntity<Void> supprimerUnJeu(@PathVariable Long id) {
         jeuUseCase.supprimerUnJeu(id);
         return ResponseEntity.noContent().build();

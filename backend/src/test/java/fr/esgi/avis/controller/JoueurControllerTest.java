@@ -53,7 +53,7 @@ class JoueurControllerTest {
 
         joueurDtoIn = new JoueurDtoIn("gamer123", "gamer@example.com", "password123", LocalDate.of(1995, 5, 15));
         joueurDtoOut = new JoueurDtoOut(1L, "gamer123", "gamer@example.com", LocalDate.of(1995, 5, 15), null);
-        avisDtoIn = new AvisDtoIn(null, "Great game!", 1L, 1L, 9.5f, null, LocalDate.now());
+        avisDtoIn = new AvisDtoIn("Great game!", 1L, 1L, 9.5f, null, LocalDate.now());
         avisDtoOut = new AvisDtoOut(1L, "Great game!", 9.5f, "Game Name", "gamer123", null, LocalDate.now());
     }
 

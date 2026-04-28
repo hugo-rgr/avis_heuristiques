@@ -7,7 +7,7 @@ Ce dépôt est maintenant structuré en deux parties :
 
 ## Prérequis
 
-- Java (version selon le `pom.xml`)
+- Java (version selon le `pom.xml` dans backend/)
 - Node.js (>= 18 recommandé)
 
 ## Lancer le backend

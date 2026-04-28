@@ -137,7 +137,6 @@ Les étapes clés :
 | **Spring Data JPA + Hibernate** | Persistence — repositories, requêtes nommées, pagination |
 | **H2** | Base en mémoire pour le développement et les tests |
 | **PostgreSQL** | Base relationnelle pour la production |
-| **Docker + Docker Compose** | Conteneurisation — image multi-stage, orchestration avec PostgreSQL |
 | **JUnit 5 + Mockito** | Tests unitaires et d'intégration (41 tests) |
 | **SpringDoc OpenAPI 3** | Documentation API auto-générée sur `/swagger-ui.html` |
 | **Spring Boot Actuator** | Healthcheck sur `/actuator/health` |

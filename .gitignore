@@ -4,6 +4,7 @@ frontend/dist/
 .claude/
 target/
 backend/.mvn/wrapper/maven-wrapper.jar
+*.DS_Store
 !**/src/main/**/target/
 !**/src/test/**/target/
 
@@ -34,3 +35,4 @@ build/
 
 ### VS Code ###
 .vscode/
+

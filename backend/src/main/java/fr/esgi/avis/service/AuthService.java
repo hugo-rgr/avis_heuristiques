@@ -36,14 +36,14 @@ public class AuthService implements AuthUseCase {
                     if (!passwordEncoder.matches(dto.motDePasse(), joueur.getMotDePasse())) {
                         throw new BadCredentialsException();
                     }
-                    return new TokenDtoOut(tokenPort.generateToken(joueur.getEmail(), "JOUEUR"), "JOUEUR");
+                    return new TokenDtoOut(tokenPort.generateToken(joueur.getEmail(), "JOUEUR", joueur.getId()), "JOUEUR");
                 })
                 .orElseGet(() -> moderateurPort.findByEmail(dto.email())
                         .map(mod -> {
                             if (!passwordEncoder.matches(dto.motDePasse(), mod.getMotDePasse())) {
                                 throw new BadCredentialsException();
                             }
-                            return new TokenDtoOut(tokenPort.generateToken(mod.getEmail(), "MODERATEUR"), "MODERATEUR");
+                            return new TokenDtoOut(tokenPort.generateToken(mod.getEmail(), "MODERATEUR", mod.getId()), "MODERATEUR");
                         })
                         .orElseThrow(() -> new UserNotFoundException(dto.email()))
                 );
